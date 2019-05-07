@@ -1,0 +1,87 @@
+==	IoC : Inversion of Control
+	
+==	Spring Container zawiera bean'y i uruchamia je wtedy kiedy potrzebuje
+
+==	POJO : Plain Old Java Object
+
+==	Dobrze dodać logger debugu springa do logback.xml jeżeli używamy logów:
+	<logger name="org.springframework" level="DEBUG/>
+
+==	bean.xml umieszczony w /resources definiuje co ma być beanem
+	<bean id="idBeana" class="pelna nazwa klasy wraz z np. com.arek>
+
+== Żeby program widział bean.xml jako plik konfiguracyjny beanów należy określić context:
+		ConfigurableApplicationContext context
+				= new ClassPathXmlApplicationContext("beans.xml");
+
+==	Constructor Based Dependency Injection:
+	- pierwszy bean potrzebuje czegos z drugiego beana i ma go w argumentach konstruktora
+	- do bean.xml dopisujemy:
+		 <bean id="pierwszyBean" class="com.arek.pierwszyBeanClass">
+			<constructor-arg ref="idDrugiegoBeana"/>
+		</bean>
+
+==	Setter Based Dependency Injection:
+	- kiedy pierwszy bean używa drugiego w setterze.  
+		<property name="nazwaPolaWSetterze" ref="nazwaDrugiegoBeana"/>
+
+== 	Aby określić metodę która ma być wywoływana za każdym razem kiedy dany Bean powstaje
+	trzeba przy jego inicjalizacji
+		* dodać argument init-method
+			<bean id="bean" class="com.arek.class" init-method="nazwaMetody"/>  
+		* dodać default-init-method na samej górze xml na końcu tagu <beans...../>
+
+== 	Podobnie można dodać metodę "destroy" która jest wywoływana kiedy bean się zamyka
+
+== 	Init i destroy moga być wywoływane też za pomocą ADNOTACJI w kodzie,
+	init = @PostConstruct
+	destroy = @PreDestroy
+	żeby to działało trzeba dodać bean:
+		<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+
+	i potem w pom.xml
+		    <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${annotations-api.version}</version>
+            </dependency>
+
+==	Aby umożliwić np. @Autowire w beans.xml dopisujemy:  <context:annotation-config/>
+	i akceptujemy wszystkie importy javy
+	Na górze beans.xml musi się znaleźć: xmlns:context="http://www.springframework.org/schema/context"
+	oraz w xsi:schemaLocation dopisać:
+        "http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"
+			
+==	<context:component-scan/> za to zawiera nie dośc że @Autowire to jeszcze autoskanuje
+	szukając wszyckich beansów oznaczonych @Component
+
+==	zamiast beans.xml można zrobić oddzielną klasę do konfiguracji DI, musi mieć adnotacje:
+	@Configuration
+	@ComponentScan(basePackages = "com.arek.nazwaPaczki")
+
+	* Jeżeli tak musimy zmienić context:
+			ConfigurableApplicationContext context
+				= new AnnotationConfigApplicationContext(AppConfig.class);
+
+== Jeżeli chcemy żeby POM zebrał dependency z innego POMu musimy go dopisać do dependencies:
+		<dependencies>
+			<dependency>
+				<groupId>com.arek.nazwaPaczki</groupid>
+				<artifactId>nazwaPomuZKtoregoBierzemyDep</>
+				<version>${project.version}</version> <!--maven sam to zgadarnie -->
+			</dependency>
+		</dependencies>
+
+==	Jeżeli klasa implementuje ApplicationListener inferface to wtedy
+	możemy stworzyć metodę wywoływaną gdy stanie sie event. Na przykład:
+		implements ApplicationListener<ContextRefreshedEvent> 
+
+	i potem implementujemy metodę onApplicationEvent która będzie wywołana za każdym razem,
+	gdy Context będzie wypełniony (wszystkie preconstructy wykonane, beany zainicjowane)
+
+== Zamist implementowania interfejsu możemy po prostu dac adnotację:
+		@EventListener(tutajKlasaEventu.class)
+			nazwaMetody(alboTutajEventJakoParametr e){
+				..
+			}

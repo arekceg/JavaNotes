@@ -1,0 +1,51 @@
+set clipboard=unnamedplus=	"When in doubt do Maven Compile"
+
+==	Maven domyślnie używa JDK 1.5 więc trzeba mu wpisać żeby uzywał innej, nowszej wersji:
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <target>${java.version}</target>
+                    <source>${java.version}</source>
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+==	Dodawanie modułów w Intellij - prawa myszka i wybieram "new -> module"
+
+==	Jeżeli robię wielomodułowy projekt MAVEN to w najwyższym pom.xml trzeba dodać 
+	<packaging>pom</packaging>. 
+	Wtedy program wie że ten artefakt nie ma być .jar albo .war ale jest ogólnie definiującym POMem. 
+
+	W takim POMie można dodać dependacies które potem przejmą wszystkie niższe pomy:
+		<dependencyManagement> 
+		….	
+		</dependencyManagement>
+
+	tutaj możemy definiować werjse dependancies itd
+	żeby potem poniższe POMy przejęły te dependency:
+		<dependency>
+			<groupId>zgodne_z_głownym_POM_dla_danej_dep.</groupId>\
+			<artifactId>tak_samo_jak_wyżej</artifactId>
+		</dependencty>
+
+==	Przy wielomodułowych projektach w głównym POMie oznaczamy moduły projektu:
+		<modules>
+			<module>modul1</module>
+		</modules>
+	Potem dany moduł musi mieć artifactId zgodne z tym co zapisane w głównym POM:
+		<artifactId>modul1</artifactId>
+
+
+==	Definiowanie properties (używamy ich jak zmiennych w pliku POM), np.
+		<properties>
+			<logback.version>1.2.3.</logback.version>
+		</properties>
+		…
+		<version>${logback.version}</version>
+

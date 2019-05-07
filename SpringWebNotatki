@@ -1,0 +1,63 @@
+==	SpringMVC depndency trzeba dodać do pom.xml
+
+==	Dodać maven containter plugin:
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.7.3</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat9x</containerId>
+                        <type>embedded</type>
+                    </container>
+                </configuration>
+            </plugin>
+	
+	* PAMIĘTAĆ O <configuration>
+
+== 	Potem w maven pod plugins wybrać cargo -> cargo:run
+
+== 	Adres containera to http://localhost:8080/nazwaWar/
+
+==	Tworzymy klasę konfiguracyjną - KONTEKST 
+	*	W nowej paczce "config" tworzymy klasę WebConfig.java
+	*	Jako że jest to klasa konfiguracyjna to musi mieć @Configuration
+	*	Dodajemy @ComponentScan żeby powiedzieć Springowi gdzie ma szukać beanów
+			~ @ComponentScan będzie szukał w obecnym package i paczkach w nim zawartych
+			~ @ComponentScan(basePackages = "nazwa.paczki") będzie szukał tylko w tej paczce
+	*	@EnableWebMvc - umożliwia obsługę MVC	
+
+== 	Głównym servletem jest Dispatcher Servler który będzie obsługiwał
+	wszystkie zapytania do innych kontrolerów
+	*	W pakiecie config tworzymy klasę WebAppInitalizer która implementuje
+		interfejt WebApplicationInitializer i jego metodę - onStartup
+	*	Tworzymy spring application context:
+			AnnotationConfigWebApplicationContext context =
+					new AnnotationConfigWebApplicationContext();
+				
+	*	Dodajemy do kontekstu plik konfiguracyjny
+			context.register(WebConfig.class)
+
+	*	Tworzymy DispatcherServlet:
+			DispatcherServlet dispatcherServlet =
+					new DispatcherServlet(context);
+
+	*	Rejestracja i konfiguracja servletu:
+			ServletRegistration.Dynamic registration =
+					servletContext.addServlet(DISPATCHER_SERVLET_NAME, dispatcherServlet);
+
+			registration.setLoadOnStartup(1); //ustawia że servlet uruchomi się na starcie
+			registration.addMapping("/");	//ustawia mapowanie url servletu
+
+
+
+== 	W Spring MVC nie musimy tworzyć servletów implementujących funkcje doPost i doGet
+	robi się to za automatycznie za pomoca annotacji
+
+== 	@Controler - praktycznie tak samo jak @Component - też jest skanowane przez Springa
+	ale ma właściwości webowe. Tak oznaczone klasy będą potem skanowane w poszukiwaniu
+	metod GET POST itd
+
+==	@GetMapping("/adres")
+	Tak oznaczamy metodę dostępną pod requestem GET
+		
