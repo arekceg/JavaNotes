@@ -1,6 +1,6 @@
-==	IoC : Inversion of Control
-	
-==	Spring Container zawiera bean'y i uruchamia je wtedy kiedy potrzebuje
+==	IoC  Inversion of Control
+
+==	Spring Container zawiera beany i uruchamia je wtedy kiedy potrzebuje
 
 ==	POJO : Plain Old Java Object
 
@@ -22,13 +22,13 @@
 		</bean>
 
 ==	Setter Based Dependency Injection:
-	- kiedy pierwszy bean używa drugiego w setterze.  
+	- kiedy pierwszy bean używa drugiego w setterze.
 		<property name="nazwaPolaWSetterze" ref="nazwaDrugiegoBeana"/>
 
 == 	Aby określić metodę która ma być wywoływana za każdym razem kiedy dany Bean powstaje
 	trzeba przy jego inicjalizacji
 		* dodać argument init-method
-			<bean id="bean" class="com.arek.class" init-method="nazwaMetody"/>  
+			<bean id="bean" class="com.arek.class" init-method="nazwaMetody"/>
 		* dodać default-init-method na samej górze xml na końcu tagu <beans...../>
 
 == 	Podobnie można dodać metodę "destroy" która jest wywoływana kiedy bean się zamyka
@@ -52,7 +52,7 @@
 	oraz w xsi:schemaLocation dopisać:
         "http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd"
-			
+
 ==	<context:component-scan/> za to zawiera nie dośc że @Autowire to jeszcze autoskanuje
 	szukając wszyckich beansów oznaczonych @Component
 
@@ -75,7 +75,7 @@
 
 ==	Jeżeli klasa implementuje ApplicationListener inferface to wtedy
 	możemy stworzyć metodę wywoływaną gdy stanie sie event. Na przykład:
-		implements ApplicationListener<ContextRefreshedEvent> 
+		implements ApplicationListener<ContextRefreshedEvent>
 
 	i potem implementujemy metodę onApplicationEvent która będzie wywołana za każdym razem,
 	gdy Context będzie wypełniony (wszystkie preconstructy wykonane, beany zainicjowane)

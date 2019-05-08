@@ -1,4 +1,4 @@
-set clipboard=unnamedplus=	"When in doubt do Maven Compile"
+== set clipboard=unnamedplus=	"When in doubt do Maven Compile"
 
 ==	Maven domyślnie używa JDK 1.5 więc trzeba mu wpisać żeby uzywał innej, nowszej wersji:
     <build>
@@ -18,13 +18,13 @@ set clipboard=unnamedplus=	"When in doubt do Maven Compile"
 
 ==	Dodawanie modułów w Intellij - prawa myszka i wybieram "new -> module"
 
-==	Jeżeli robię wielomodułowy projekt MAVEN to w najwyższym pom.xml trzeba dodać 
-	<packaging>pom</packaging>. 
-	Wtedy program wie że ten artefakt nie ma być .jar albo .war ale jest ogólnie definiującym POMem. 
+==	Jeżeli robię wielomodułowy projekt MAVEN to w najwyższym pom.xml trzeba dodać
+	<packaging>pom</packaging>.
+	Wtedy program wie że ten artefakt nie ma być .jar albo .war ale jest ogólnie definiującym POMem.
 
 	W takim POMie można dodać dependacies które potem przejmą wszystkie niższe pomy:
-		<dependencyManagement> 
-		….	
+		<dependencyManagement>
+		….
 		</dependencyManagement>
 
 	tutaj możemy definiować werjse dependancies itd
@@ -48,4 +48,3 @@ set clipboard=unnamedplus=	"When in doubt do Maven Compile"
 		</properties>
 		…
 		<version>${logback.version}</version>
-
