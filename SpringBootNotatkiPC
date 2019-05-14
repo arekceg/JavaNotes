@@ -1,0 +1,56 @@
+==  Aby dodać SpringBoot do projektu musimy dodać moduł SpringBoot
+    jako parent naszego np wielomodułowego projektu
+
+==  SpringBoot initializer tworzy nowy jednomodłowy projekt SpringBoot
+
+==  Konfiguacja loggera w SpringBoot odbywa się za pomocą logback-spring.xml. Dodajemy:
+      	<include resource="org/springframework/boot/logging/logback.base.xml"/>
+    i potem określamy loggery, np:
+            <logger name="com.arek" level="DEBUG"/>
+            <logger name="org.springframework" level="INFO"/>
+
+==  Usuwamy z naszego głównego pom.xml nasze parameters i dependecy bo to będzie w generowane przez SpringBoogIinit
+
+==  W głównym, konfigurującym pom.xml dodajemy SpringBoot jako parent przed tagami <module></module>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${versja}</version>
+    </parent>
+
+==  W pom-ach innych modułów usuwamy wszystkie depndency, dodajemy:
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+==  W pomie modułu zawierającego Main.java trzeba określić plugin do budowania .jar:
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+==  Jeżeli do istniejącego projektu chcemy dodatkowo dołożyć SpringWeb, to w pom.xml:
+		<dependency>
+			<groupId>nazwa.paczki</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+  = oraz
+        <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>

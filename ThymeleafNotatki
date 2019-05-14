@@ -1,0 +1,15 @@
+==	Dodać depndency do Thymeleaf:
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+==	ViewResolver automatycznie dorzuca sobie prefixy i sufixy w takim wypadku
+		i żeby się do nich dopasować musimy stworzyć folder "/templates" w folderze
+		resources.
+		W tym folderze tworzymy pliki "HTML" - home.html
+
+==	home.html - trzeba zmienić na samej górze:]
+			<html lang="en" xmlns:th="http://www.thymeleaf.org">
+		"xmlns" - określamy xml namespace dla dokumentu i dzięki temu będziemy 
+		mieli dostęp do thymeleaf
