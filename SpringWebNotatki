@@ -1,31 +1,31 @@
 ==	SpringMVC depndency trzeba dodać do pom.xml
 
 ==	Dodać maven containter plugin:
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.7.3</version>
-                <configuration>
-                    <container>
-                        <containerId>tomcat9x</containerId>
-                        <type>embedded</type>
-                    </container>
-                </configuration>
-            </plugin>
-	
+						<plugin>
+								<groupId>org.codehaus.cargo</groupId>
+								<artifactId>cargo-maven2-plugin</artifactId>
+								<version>1.7.3</version>
+								<configuration>
+										<container>
+												<containerId>tomcat9x</containerId>
+												<type>embedded</type>
+										</container>
+								</configuration>
+						</plugin>
+
 	* PAMIĘTAĆ O <configuration>
 
 == 	Potem w maven pod plugins wybrać cargo -> cargo:run
 
 == 	Adres containera to http://localhost:8080/nazwaWar/
 
-==	Tworzymy klasę konfiguracyjną - KONTEKST 
+==	Tworzymy klasę konfiguracyjną - KONTEKST
 	*	W nowej paczce "config" tworzymy klasę WebConfig.java
 	*	Jako że jest to klasa konfiguracyjna to musi mieć @Configuration
 	*	Dodajemy @ComponentScan żeby powiedzieć Springowi gdzie ma szukać beanów
 			~ @ComponentScan będzie szukał w obecnym package i paczkach w nim zawartych
 			~ @ComponentScan(basePackages = "nazwa.paczki") będzie szukał tylko w tej paczce
-	*	@EnableWebMvc - umożliwia obsługę MVC	
+		*	@EnableWebMvc - umożliwia obsługę MVC
 
 == 	Głównym servletem jest Dispatcher Servler który będzie obsługiwał
 	wszystkie zapytania do innych kontrolerów
@@ -34,7 +34,7 @@
 	*	Tworzymy spring application context:
 			AnnotationConfigWebApplicationContext context =
 					new AnnotationConfigWebApplicationContext();
-				
+
 	*	Dodajemy do kontekstu plik konfiguracyjny
 			context.register(WebConfig.class)
 
@@ -49,8 +49,6 @@
 			registration.setLoadOnStartup(1); //ustawia że servlet uruchomi się na starcie
 			registration.addMapping("/");	//ustawia mapowanie url servletu
 
-
-
 == 	W Spring MVC nie musimy tworzyć servletów implementujących funkcje doPost i doGet
 	robi się to za automatycznie za pomoca annotacji
 
@@ -58,6 +56,122 @@
 	ale ma właściwości webowe. Tak oznaczone klasy będą potem skanowane w poszukiwaniu
 	metod GET POST itd
 
-==	@GetMapping("/adres")
+==	@GetMapping("adres")
 	Tak oznaczamy metodę dostępną pod requestem GET
-		
+
+==  @ResponseBody
+		Tak oznaczamy metodę która ma zwracaną wartość wyświetlić od razu w ciele strony
+		tak jak getWriter().append("...");
+
+====== GENEROWANIE WIDOKÓW:
+
+==  SpringMVC używa elementu ViewResolver to obsługi widoków
+
+==	ViewResolver definiujmy w WebConfig
+			@Bean
+			public ViewResolver viewResolver(){
+				UrlBasedViewResolver viewResolver = new InternalResourceViewResolver();
+				viewResolver.setPrefix(RESOLVER_PREFIX); //tutaj np "/WEB-INF/views/"
+				viewResolver.setSuffix(RESOLVER_SUFFIX); //tutaj np ".jsp"
+				return viewResolver;
+			}
+
+==	Jeżeli metoda z @GetMapping("adres") zwraca String to ten String leci do
+		ViewResolvera, viewResolver dodaje mu prefix i sufix i przenosi do tego viewa
+
+==	Żeby przekazać coś do view jako atrybut metody z @GetMapping musimy podać Model
+		potem
+			model.addAttribute("nazwaAtrybutu", "wartośćAtrybutu")
+		przekazujemy atrybuty do widoku
+
+==	Inny sposób na przekazanie do widoku to tworzenie metody z annotacją:
+			@ModelAttribute("welcomeMessage")
+			public String welcomeMessage(){
+				return "Welcome to this Demo application";
+			}
+
+		* teraz w dowolnym widoku wywołanym z danego kontrolera mamy dostęp do atrybutu
+				${welcomeMessage}
+			o zawartości "Welcome to this Demo application"
+
+==	@PostMapping("adres") - obsługa POST
+
+==	Spring ma wbudowane przekierowywanie - metoda opisana @GetMapping albo @PostMapping
+		może na końcu przekierowywać nie do widoku ale na inną zmapowaną metodę.
+		Piszemy:
+		//zamiast
+		return "nazwaWidoku"
+		//Piszemy
+		return "redirect:/"+"mapowanieMetodyNaKtórąPrzekerowujemy"
+
+==	ViewController Jeżeli chcemy żeby na główną stronę wchodziło się bezpośrednio na widok
+		a nie przez metodę GET kontrolera przekierowującą na widok musimy ten widok skonfigurować
+		jako ViewController.
+
+			* W klasie WebConfig dopisać że implementuje WebMvcConfigurer
+			* Implementujemy metodę addViewControllers - metoda ta automatycznie tworzy w tle
+				prosty kontroler do obsługi naszego ViewControllera
+			* Używamy metody:
+						registry.addViewController("/").setViewName("adresWidoku");
+				"/" oznacza że wchodząc bez podania dalszego adresu wbijemy na zarejestrowany widok
+
+
+== 	Klasy z adnotacją @Service służą jako element modelu mające zapewniać logikę biznesową
+		dla reszty aplikacji.
+
+=== DOBRA PRAKTYKA:
+
+==	Tworzenie paczki utils
+
+==	Zamiast wpisywać cały czas ten sam String np adres widoku lepiej w paczce utils
+		stworzyć klasę do przechowywania stałych.
+			* taka klasa np. Mappings powinna być final (bo nie będziemy jej extendować)
+				oraz powinna mieć prywatny konstruktor bezargumentowy - w ten sposób zapewniamy
+				że nie będzie można jej zainicjalizować - BEZPIECZEŃSTWO
+
+==	Stworzyć dwie klasy ze stałymi : 	Mappings do stałych mapujących requesty
+																			ViewNames do stałych przekierowujących na widoki
+
+===== SPRING FORMS
+
+==	UWAGA
+		Możemy zaimportować do JSP nasze klasy ze stałymi żeby zmniejszyć ryzyko literówek:
+			<%@ page import="adres.paczki.NazwaKlasy"%>
+		Teraz możemy używająć EL użyć np. ${NazwaKlasy.CONSTANT1}
+
+== JSTL może tworzyć nam URL żeby ich nie pisać ręcznie:
+		<c:url var="nazwaLinku" value="adresMetodyKontrolera"/>
+		<a href="${nazwaLinku}">Przeniesie mnie do metody kontrolera </a>
+
+== Używając c:param można np. linkiem przekazywać elegancko paramatr do kontrolera
+            <c:url var="nazwaLinku" value="adresMetodyKontrolera">
+                <c:param name="paramName" value="paramValue"/>
+            </c:url>
+						<a href="${nazwaLinku}">LINK</a>
+		Sprawi to że po kliknięci LINK
+		do metody kontrolera przekazany zostanie parametr paramName o wartości paramValue
+
+==	W pliku JSP korzystających z formularzy dodać:
+			<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
+==	Spring forms potrafi zwracać całe obiekty w formie ModelAttribute - gotowe do obsłużenia
+		przez odpowiednią metodę @PostMapping
+
+==	Defniowanie:
+			<form:form method="POST" modelAttribute="nazwaAtrybutu">
+				<label>Pole1</label>
+					<form:input path="nazwaPola"/>
+			</form>
+
+		* "nazwaPola" musi dokładnie odpowiadać nazwie pola w obiekie, który chcemy
+			żeby ten formularz zwrócił.
+
+*******	WAŻNE metoda GET prowadząca do widoku z formularzem musi przekazywać w modelu
+				(model.addAttribute) pusty obiekt który formularz ma wypełnić i potem zwrócić
+
+==	Aby użyć obiektu przekazanego przez Spring Form w metodzie opisanej @PostMapping
+		musimy użyć przy odpowiednim parametrze @ModelAttribute np:
+				@PostMapping("adresRządaniaPOST")
+			    public String processItem(@ModelAttribute("nazwaAtrybutu") Item itemFromForm){
+					return "widokLubRedirectNaMetodę";
+			    }

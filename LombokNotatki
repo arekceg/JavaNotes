@@ -1,0 +1,23 @@
+
+== @Data
+    dopisany PRZED KLASĄ zapewnia konstruktor dla wszystkich NonNull lub final pól,
+    gettery i settery dla wszystkich NonNull lub final pól oraz
+    Equals i HashCode - domyślnie po wszystkich polach.
+
+== @EqualsAndHashCode
+    dopisany przed klasą generuje Equals i HashCode dla wszystkich pól.
+    Można to modyfikować dodając:
+      @EqualsAndHashCode(of={pole1, pole2, ...})
+    wtedy Equals i HashCode będzie napisany tylko dla tych pól.
+    Albo przed polem:
+      @EqualsAndHashCode.Include
+      // wtedy trzeba dopisać przed klasą @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+      //lub
+      @EqualsAndHashCode.Exclude
+    Wtedy dane pole będzie włączone/wyłączone z tworzonych metod
+
+==  @NonNull przed parametrem albo polem zapewnia że nie będzie on nullem
+      public void testClass(@NonNull int counter){ ... }
+      // lub
+      @NonNull
+      int counter;
