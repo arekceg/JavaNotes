@@ -62,6 +62,19 @@
 ==  @ResponseBody
 		Tak oznaczamy metodę która ma zwracaną wartość wyświetlić od razu w ciele strony
 		tak jak getWriter().append("...");
+		==== ERRATA ====
+		Takie oznacznie znaczy że zwracamy obiekt w ciele response, nie koniecznie renderujemy
+		w przeglądarce
+
+== 	@RestController oznacza @Controller +  @ResponseBody
+
+==	@PathVariable przy zmiennej w parametrach metody:
+				@GetMapping("/orders/{orderId}")
+				public void nazwaMetody(@PathVariable String orderId){
+					//kod
+				}
+		Tak podaną nam zmienną w URI możemy wykorzystać w metodzie podobnie
+		jak @RequestParameter("orderId") jak mamy URI np. /orders/getorder?orderId=123
 
 ====== GENEROWANIE WIDOKÓW:
 
