@@ -54,3 +54,18 @@
             </plugin>
         </plugins>
     </build>
+
+
+== SpringBoot Dev Tools - pozwalają np szybko restartować aplikację po zmianie kodu:
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+		</dependency>
+
+    <scope>runtime</scope> zapewnia że te narzędzie będą dostępne podczas runtime.
+    nie będą dostępne w releasie.
+
+==  Jak mamy DevTools to wtedy dajemy Build Project (ctrl+f9) żeby przebudować projekto
+    Jeżeli zrobimy zmiany w klasach to zrestaruje to aplikację, jak w templatkach
+    to tylko odświeży

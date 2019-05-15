@@ -11,5 +11,8 @@
 
 ==	home.html - trzeba zmienić na samej górze:]
 			<html lang="en" xmlns:th="http://www.thymeleaf.org">
-		"xmlns" - określamy xml namespace dla dokumentu i dzięki temu będziemy 
-		mieli dostęp do thymeleaf
+		"xmlns" - określamy xml namespace dla dokumentu i dzięki temu będziemy
+		mieli dostęp do thymeleaf pod <th:>
+
+==	LINK:
+			<a th:href="adres" th:text="textLinku"></a>
