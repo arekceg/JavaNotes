@@ -1,0 +1,22 @@
+=== Integration Testing of Spring Data JPA Repositories ===
+
+== Testy jednostkowe ==
+
+-	Operują na pustych danych, sprawdzają tylko
+	poprawność wyołania metod???
+
+-	annotacja @WebMvcTest nad klasą testu
+-	@Autowired 
+	MockMvc mockMvc;
+	// dzięki temu możemu budować mocki elementów mvc
+
+-	Annotacją @MockBean oznaczamy beany których będziemy potrzebować,
+	np. repozytoria lub servisy
+
+-	mock.perform(
+		MockMvcRequestBuilder.get("/all/")
+			//w nawiasach nazwa metody mvc którą chcemy testować
+		.accept(MediaType.APPLICATION_JSON
+		).andReturn();
+
+== Testy integracyjne ==

@@ -1,0 +1,57 @@
+=== FIRST ===
+
+-	Fast
+		*	Testy powinny być jak najmniejsze i najszybsze
+
+-	Isolated
+		*	Testy powinny testować jak najmniejsze, izolowane, obszary kodu
+		*	Testy nie powinny być zależne od wyników innych testów
+
+-	Repetable
+		*	Testy powinny zwarać zawsze ten sam wynik, nie powinny np opierać
+			się o zewnętrzne serwisy, które nagle mogą przestać działać
+
+-	Self-validating
+		*	Automatyzacja tesów - powinny być automatycznie odapalne
+
+-	Timely
+		*	Pisać testy w trakcie tworzenia lub zaraz po zmodyfikowaniu
+			funkcjonalności. Nie zostawiać na koniec!
+
+=== CORRECT ===
+
+Pomaga w wyszukiwaniu warunków granicznych i sprawdzenia ich obsługi
+
+-	Conformance
+		*	Zgodność z wymaganiami biznesowymi
+		*	Sprawdzenie *złych* warunków - np. podanie nulla,
+			podanie nieporawnego emaila
+
+-	Ordering
+		*	Sprawdzenie porządku danych w zbiorach - jeżeli metoda oczekuje
+			listy postortowanej, sprawdzić jak zachowa się dla nieposortowanej
+		*	Podobnie sprawdzić na wyjściu - czy kolejność zwracanego zbioru
+			jest zgodna z oczekiwaniami
+
+-	Range
+		*	Sprawdzenie przekroczenia maksymalnej wartości danego typu
+			Jeżeli przekracza to np. rzucić wyjątek 
+		*	Sprawdzenie czy np. dama wartość nie przekracza *dopusczalnej* wartości
+			np. sprawdzenie boków trójkąta
+
+-	Reference
+		*	Czy wszystkie warunki wstepne testu zostały poprawnie wykonane
+
+-	Existence
+		*	Sprawdzanie jak metoda zachowa się przy pustym parametrze. 
+			np. null, pusty string, pusta kolekcja
+
+-	Cardinality
+		*	Testowanie mocy zbioru - czy zwracane lista czy tablica
+			ma rozmiar taki, jak oczekujemy
+
+-	Time
+		*	Testowanie kolejności wywołania metod
+			np. jeżeli poprawna kolejność wykonania metod to A -> B -> C
+			to sprawdzić wywołanie C bez wywołania B wczesniej
+		*	Testowanie miejsc w kodzie gdzie mamy wielowątkowość

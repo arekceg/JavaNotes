@@ -1,0 +1,262 @@
+=== TDD ===
+
+-	Testy funkcjonalneTesty zakładające, że moduł jest „czarnympudełkiem”, o którym wiadomo tylko,
+	jak ma się achowywać.
+	Nazywamy je też testami czarnejskrzynki ( black-box testing).
+
+-	Testy strukturalneTesty skupiające się na wewnętrznej pracymodułu, a nie
+	na jego kooperacji z inny mimodułami.
+	Nazywamy je też testami białejskrzynki ( white-box testing).6
+
+
+== TWORZENIE TESTÓW ==
+
+-	Alt+enter na nazwie klasy -> create test
+-	Annotacja @Test nad każdą metodą do testowania
+-	Testy jednostkowe powinny być tworzone do KAŻDEJ metody
+-	Testy jednostkowe powinny być tworzone do każdego wariantu metody
+		(dla każdej możliwości if-a itp)
+
+
+== PISANIE TESTÓW - PODSTAWY ==
+
+-	Aby puste testy nie zwracały "pass" dodajemy kod
+		fail("wiadomość do wyświetlenia")
+
+-	Testy musza być od siebie niezależne. Co dzieje się w jednym teście
+	nie może wpłynąć na inne testy
+
+-	Testy tworzymy do sprawdzenia jednego asserta, umieszczanie
+	w tescie więcej jest złą praktyką
+
+- Metoda wywołana przed każdym testem:
+		//JUNIT4
+			@Before
+		//JUNIT5
+			@BeforeEach
+			public void setup(){}
+
+- Metoda wywołana raz, przed wszystkimi testami:
+		//JUNIT4 - statycznie
+			@BeforeClass 
+		//JUNIT5
+			@BeforeAll
+			public STATIC void setup(){}
+
+- Podobnie aby wywoływać PO, ale metody muszą być statyczne:
+		//JUNIT4
+			@After
+			@AfterClass
+		//JUNIT5
+			@AfterEeach
+			@AfterAll //metoda statyczna
+
+-	Sprawdzanie równości:
+		arrestEqualst(expected, actual);
+	AssertEquals używa wbudowanych w obiekty metod equals.
+
+		assertEquals(expected, acutal, delta)
+	Delta okresla dopuszczalne odchylenie wyniku i jego dokładność.
+	Jak mamy wynik w stylu 13.999999999999 != 14.00 wtedy dajemy delta = 0.01 i wszystko gra
+
+		assertNotEquals()
+	Pass jeżeli nie sa równe
+
+		assertArrayEquals()
+	Pass jeżeli dłuigości array i ich zawratośc sa takie same
+
+
+-	Sprawdzanie booleana:
+		assertTrue()
+		assertFalse()
+
+-	Sprwadzanie nulla:
+		assertNull()
+		assertNotNull()
+
+
+-	Sprawdzanie referencji do obiektu:
+		assertSame()
+		assertNotSame()
+	W przeciwieństwie do assertEquals() sprawdza czy są to referencje
+	do tych samych obiektów, a nie używa equals() do porownania ich
+
+== WYJĄTKI ==
+
+= JUNIT4 =
+@Test(expected = KlasaWyjątku.class)
+
+= JUNIT5 =
+assertThrows(KlasaWyjątki.class () -> {
+	// wyrażenie rzucające wyjątek
+});
+
+== IGNOROWANIE TESTÓW ==
+
+= JUNIT 4 =
+@Ignore
+
+= JUNIT 5 =
+@Disabled
+
+
+== NAZYWANIE KLAS TESTUJĄCYCH ==
+
+= JUNIT 5 =
+@DisplayName("nazwa klasy")
+
+== ASSERT THAT ==
+
+-	Porównywanie wartości z ustalonym Matcherem - HAMCREST MATCHERS:
+		assertThat()
+	*Dodać zalezności do hamcrest-core i hamcrest-library
+
+	Wygląda to np. tak:
+		assertThat(library.size(), CoreMathers.is(CoreMatchers.equalTo(10)));
+
+	Co po statycznych importach można uprościć na:
+		assertThat(library.size(), is(euqualTo(10)));
+
+	*	INNE PRZYKŁADY:
+			assertNotSame(new Object(), new Object())
+		to to samo co:
+			assertThat(new Object(), not(sameInstance(new Object())));
+
+			assertThat("Effective Java", constainsString("Java"));
+
+			assertThat("Effective Java", both(containsString("Java")).and(containsString("Effective")));
+
+			assertThat("Effective Java", allOf(containsString("Java"), containsString("Effective")));
+			assertThat("Effective Java", anyOf(containsString("Java"), containsString("Effective")));
+			assertThat("Effective Java", not(anyOf((containsString("Java"), containsString("Effective"))));
+
+		Compose Matchers:
+			assertThat("Effective Java", either(containsString("Java")).or(containsString("Effective")));
+
+			assertThat("Effective Java", either(containsString("Java")).or(equalTo("Effective Java")));
+
+	* Obsługa kolekcji
+			assertThat(bookTitles, hasItem("Effective Java"));
+			assertThat(bookTitles, hasItems("Effective Java", "Design Patterns"));
+			assertThat(bookTitles, hasItem(startsWith("Effective"));
+			assertThat(bookTitles, hasItem(endsWith("Java")));
+
+== ŁACZENIE ASERCJI JUNIT 5 ==
+	
+	assertAll("wiadomość",
+		() -> assertThat(pierwszy warunek)
+		.
+		.
+		.
+		() -> /*ostatni warunek*/
+		);
+
+== POWTARZANIE TESTU JUNIT 5 ==
+
+-	annotacja
+	@RepeatedTest(5)
+	//powtórzy test 5 razy
+
+
+== ASUMPCJE ==
+
+-	Kod wykona się tylko przy spełnieniu założenia
+
+-	pakiet Assume.
+
+-	np.	//ten kod się wykona zawsze
+			assumeTrue(jakieśZałożenie);
+			//ten kod się nie wykona jeżeli będzie false
+
+-	assumeThat(boolean assumption, Executable executable);
+	/* w executable umieszczamy wyrażenie lambda zawierające
+		wszystkie nasze asercje. jeżeli warunek nie będzie spełniony
+		to nie zostaną w ogóle sprawdzone */
+
+== TESTY PARAMETRYZOWANE ==
+
+
+
+=== JUNIT 4 ===
+-	Przy definicji klasy testu musimy dać annotację 
+		@RunWith(Parametrized.class)
+
+-	Z annotacją @Parameterized.Parameters tworzymy metodą zwracającą kolekcję parametrów.
+	Parametry te JUNIT potem wstrzyknie do odpowiednich metod przy tesowaniu. Na przykład:
+	//mamy trzy pola
+		private int amount;
+		private boolean isUserLogged;
+		private int expected;
+
+	//więc musimy zwrócić kolecję wypełniającą te pola:
+	   @Parameterized.Parameters
+	  	public static Collection<Object> testConditions(){
+	  		return Arrays.asList(new Object[][]{
+	  				//amount,isUserLogged,expected
+	  				{100.00, true, 1100.00},
+	  				{200.00,true,200.00},
+	  		});
+	   }
+
+== ŁĄCZENIE TESTÓW ==
+== JUNIT 4 ==
+
+-	Annotacja nad klasą
+		@RunWith(Suite.class)
+		@SuiteClasses({klasaTest1.class, klasaTest2.class})
+
+
+==== MOCKOWANIE ====
+
+-	Atrapy:	Obiekt w teście, który jest nam potrzebny jako wypełnienie,
+				a nie spełnia żadnego logicznego celu. Możemy w tym celu wykorzystać nawetpustą klasę.
+
+-	Fake:	Obiekt, który zawiera już logikę, ale nie taką jak prawdziwa implementacja.
+			Na przykład tabelkaz danymi zamiast bazy danych.
+
+-	Zaślepka(stub):	Obiekt mający minimalną implementację potrzebnego przez nas interfejsu.
+							Zazwyczajfunkcje zwracają dla jakiejś danej wejściowej predefiowaną daną wyjściową.
+
+-	Mock:	Obiekt, który poza predeniowaną daną wyjściową śledzi jeszcze wszystkie interakcje z interfejsem.
+			Zazwyczaj bardziej skomplikowane klasy. Najlepiej skorzystać już z dostępnych
+			wchodzących w skład bibliotek.
+
+== MOCKITO ==
+
+-	Jeden z frameworków do Mockowania
+
+-	Jeżeli w teście potrzebuję sztucznego obiektu np. serwisu do udawania współpracy z baza danych:
+		//mock będzie działał po statycznym imporcie
+		private static DatabaseService dbService = mock(DatabaseService.class);
+
+	Teraz już test nie będzie mi rzucał wyjątków, że nie mógł znaleźć tego obiektu. 
+	Taki obiekt jest wydmuszką, nie ma w sobie wbudowanej żadnej logiki, nawet jeżeli klasa,
+	z której jest tworzony ma logikę biznesową w sobie.
+
+-	Jeżeli chcemy powiedzieć mockito jaki wynik powinnismy otrzymać z mocka:
+		when(createdMock.foo(1,2)).thenReturn(3);
+	Wtedy test może przejść.
+
+- Aby sprawdzić czy nasz test użył stworzonego przez nas mocka:
+		verify(createdMock).foo(1,2);
+
+
+== TESTY INTEGRACYJNE ==
+
+-	Stawia kontekst Springa, daje dostęp np. do plików konfiguracyjnych
+
+-	Annotacje:
+	//jUnit4
+	@RunWith(SpringRunner.class)
+	@SpringBootTest
+
+	//jUnit5
+	@ExtendWith(SpringExtension.class)
+	@SpringBootTest
+
+
+
+
+
+
+

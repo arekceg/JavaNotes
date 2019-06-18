@@ -1,0 +1,77 @@
+==== MOCKOWANIE ====
+
+-	Atrapy:	Obiekt w teście, który jest nam potrzebny jako wypełnienie,
+				a nie spełnia żadnego logicznego celu. Możemy w tym celu wykorzystać nawetpustą klasę.
+
+-	Fake:	Obiekt, który zawiera już logikę, ale nie taką jak prawdziwa implementacja.
+			Na przykład tabelkaz danymi zamiast bazy danych.
+
+-	Zaślepka(stub):	Obiekt mający minimalną implementację potrzebnego przez nas interfejsu.
+							Zazwyczajfunkcje zwracają dla jakiejś danej wejściowej predefiowaną daną wyjściową.
+
+							W praktyce tworzymy nowa klasę która implementuje stubbowany interfejs,
+							w niej tworzymy wersje metod interfejsu które np. zwrócą nam gotowy,
+							znany nam zestaw danych.
+
+-	Mock:	Obiekt, który poza predeniowaną daną wyjściową śledzi jeszcze wszystkie interakcje z interfejsem.
+			Zazwyczaj bardziej skomplikowane klasy. Najlepiej skorzystać już z dostępnych
+			wchodzących w skład bibliotek.
+
+== MOCKITO ==
+
+-	Jeden z frameworków do Mockowania
+
+-	Jeżeli w teście potrzebuję sztucznego obiektu np. serwisu do udawania współpracy z baza danych:
+		//mock będzie działał po statycznym imporcie
+		private static DatabaseService dbService = mock(DatabaseService.class);
+
+	Teraz już test nie będzie mi rzucał wyjątków, że nie mógł znaleźć tego obiektu. 
+	Taki obiekt jest wydmuszką, nie ma w sobie wbudowanej żadnej logiki, nawet jeżeli klasa,
+	z której jest tworzony ma logikę biznesową w sobie.
+
+-	Jeżeli chcemy powiedzieć mockito jaki wynik powinnismy otrzymać z mocka:
+		when(createdMock.foo(1,2)).thenReturn(3);
+	Wtedy test może przejść.
+
+	Inny zapis, zgodny z BDD (behaviour driven development)
+		given(createdMock.foo(1,2)).willReturn(3);
+
+-	Aby sprawdzić czy nasz test użył jakiejś metody ze stworzonego przez nas mocka:
+			verify(createdMock).foo();
+		// dodatkowe możliwości
+		// sprawdzi czy metoda wywoła się conajmniej raz
+			verify(createdMock, atLeastOnce()).foo();
+		// sprawdzi czy metoda wywoła się 2 razy
+			verify(createdMock, atLeast(2)).foo();
+		// sprawdzi czy metoda nigdy się nie wywołała
+			verify(createdMock, never()).foo();
+			// lub
+			then(createdMock).should(never()).foo();
+
+	* Składnia BDD:
+			then(createdMock).should().foo();
+
+-	Sprawdzenie kolejności wykonania metod:
+	//sprawdzi czy foo() wykona się przed bar()
+		InOrder inOrder = inOrder(createdMock);
+		inOrder.verify(createdMock).foo();
+		inOrder.verify(createdMock).bar();
+
+-	Jeżeli w zamockowanej klasie jest metoda, która zwraca jakiś obiekt, np. kolekcję, mockito postara się nie zwracać null, tylko pusty element danego typu, np. pustą listę, lub 0 dla Integera, false dla boolean.
+
+== SPY ==
+** NIE UŻYWA SIĘ ICH NAJCZĘSCIEJ **
+
+-	Spy definiuje się tak samo jak Mock tylko że pisze się Spy.
+		Foo fooSpy = spy(Foo.class);
+
+-	Spy zachowuje logikę zawartą w klasie
+
+-	Z obiektu Spy cały czas możemy stubowac metody:
+		// wszystkie metody oprócz bar() będą działać zgodnie z implementacją w klasie Foo.
+			when(fooSpy.bar()).thenReturn(null);
+
+-	Wszystkie metody z klasy fooSpy możemy sprawdzać jak w zwykłym mocku:
+		verify(fooSpy).bar();
+
+

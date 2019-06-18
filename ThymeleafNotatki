@@ -16,3 +16,15 @@
 
 ==	LINK:
 			<a th:href="adres" th:text="textLinku"></a>
+
+=== Thymeleaf preprocessing ===
+
+==	Służy do modyfikacji wyrażenia któro będzie użyte w widoku
+
+==	${__${T(wyrażenie)}__}
+
+==	Pobieranie typów (klas) java żeby móc użyć metod lub stałych statycznych w nich zawartych:
+		${__${T(pakiet.klasy.nazwa.klasy).STAŁA/METODA}__}
+
+==	Jeżeli chcemy dodać np. stałą która mam być użyta jako URL:
+			@{__${T(wyrazenie)}__}
