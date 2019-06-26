@@ -1,0 +1,15 @@
+-	Cykl
+		* 	Red - piszemy nieprzechodzący test funkcjonalności którą chcemy stworzyć
+		* 	Green - piszemy funkcjonalność, aby test przeszedł
+		*	Refactor - refaktorujemy, zmieniamy test, zmieniamy funkcjonalność
+		*	Red - znowu
+			.
+			.
+	Dodajemy kawałek testu -> dodajemy kawałek implementacji ->
+	-> kawałek testu -> kawałek implementacji -> ....
+
+	Dodawane kawałki testu moga być na tyle małe jak tworzenie obiektu,
+	z klasy której jeszcze nie ma - wtedy musimy dodać klasę, żeby test przeszedł.
+
+	* 	Gdy wejdziemy w RED nie piszemy już ani linijki kodu więcej! * 
+	*	W testowanej klasie dodajemy tylko tyle linijek, ile potrzeba by wejść w GREEN *

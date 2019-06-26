@@ -1,0 +1,26 @@
+-	Dodać zależność
+		org.springframework.boot
+		spring-boot-starter-test
+
+
+
+- 	Adnotacja przed klasa testującą Foo:
+	//zapewnia TestContext framework
+		@RunWith(SpringJUnit4ClassRunner.class);
+	//zapewnia kontekst springa dla testów integracyjnych
+		@SpringBootTest(classes = Foo.class);
+	//@IntegrationTest i @WebAppConfiguiration
+		@WebIntegrationTest 
+
+-	Autowireujemy kontekst:
+		@Autowired
+		private WebApplicationContext context;
+
+-	Tworzymy obiekt MockMVC
+		private MockMvc mockMvc;
+
+-	Tworzymy metodę setUp:
+		public void setUp() {
+			//trzeba postawić kontekst springa
+			this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+		}
