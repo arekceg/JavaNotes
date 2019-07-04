@@ -2,12 +2,10 @@
 		org.springframework.boot
 		spring-boot-starter-test
 
-
-
 - 	Adnotacja przed klasa testującą Foo:
 	//zapewnia TestContext framework
 		@RunWith(SpringJUnit4ClassRunner.class);
-	//zapewnia kontekst springa dla testów integracyjnych
+	//zapewnia kontekst springa dla testów integracyjnych klasy Foo
 		@SpringBootTest(classes = Foo.class);
 	//@IntegrationTest i @WebAppConfiguiration
 		@WebIntegrationTest 

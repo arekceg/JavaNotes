@@ -2,6 +2,7 @@
 -	Tworzymy klasę konfiguracyjną dla JMS:
 		@Configuration
 		@EnableJms // tylko jeżeli nie używamy zewnętrznego brokera JMS
+-	W Spring Boocie mozemy dodac annotacje @EnableJms nad glowna klasa aplikacji
 
 -	PRODUCER : W ciele klasy definiujemy @Bean zwracający nam queue do której będziemy
 	wysyłać wiadomości
@@ -29,20 +30,22 @@
 		public JmsTemplate jmsTemplate(){
 			//tworzy nowy JmsTemplate przekazując mu
 			//nasz customowy ConnectionFactory
-			return new JmsTemplate(activeMQConnectionFactory())
+			return new JmsTemplate(activeMQConnectionFactory());
 		}
 
 -	PRODUCER : W kontrolerze na zautowireowanym obiekcie jmsTemplate możemy wywołać metodę .convertAndSend
 	która przyjmuje jako argument to na co mamy wysłać obiekt i co mamy wysłać, np:
+
 	//pobierz wiadomość z URI, wyślij na kolejkę queue
 		@GetMapping("/{message}")
 		public String publish(@PathVariable String message){
 			jmsTemplate.convertAndSend(queue, message);
-			//jmtTemplate jest zoverloadowany tak ze w pierwszym parametrze
-			//moze przyjac dwolny obiekt dziedziczacy z klasy Destination, np. Queue albo Topic
-			//moze tez przyjac String bedacy nazwa kolejki lub topicu na ktory chcemy wyslac obiekt
+				//jmtTemplate jest zoverloadowany tak ze w pierwszym parametrze
+				//moze przyjac dwolny obiekt dziedziczacy z klasy Destination, np. Queue albo Topic
+				//moze tez przyjac String bedacy nazwa kolejki lub topicu na ktory chcemy wyslac obiekt
 			return "Message published";
 		}
+-	Jeżeli podamy w jmsTemplate nazwę destination, która nie istnieje, to JmsTemplate automatycznie ją stworzy
 
 -	W klasie, która ma nasłuchiwać definiujemy metodę z annotacją:
 		@JmsListener(destination = "nazwaKolejki")

@@ -50,8 +50,7 @@
 == ANNOTACJE ==
 
 -	Aby aktywować annotacje w Javie:
-		@Rule 
-		public MockitoRule rule = MockitoJUnit.rule();
+/
 	// LUB przed klasą testową
 		@RunWith(MockitoJUnitRunner.class)
 	// LUB 

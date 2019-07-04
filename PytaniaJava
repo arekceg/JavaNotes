@@ -1,0 +1,193 @@
+1.	Co to jest String Pool
+	String Pool jest to miejsce w Heapie gdzie przechowywane są stworzone Stringi.
+	Jeżeli String tworzony jest przez `new` to nie jest wrzucany do Poola
+		String s1 = "Cat";
+		String s2 = "Cat";
+		String s3 = new String("Cat");
+		s1 == s2; //true bo wskazują na to samo miejsce w String Pool
+		s1 == s3; //false bo wskazuja na inne miejsca w pamięci
+	Istnieje metoda `intern()`, która przerzuci String do String Pool.
+
+2.	Róznica między String, StringBuffer a StringBuilder
+	- 	String:	immutable, używa StringBuffera do konkatynacji
+	-	StringBuffer: 	przez to że sam String jest immutable
+						to Buffer służy do konstrukcji, konkatynacuji stringów, substringowania itd
+	-	StringBuilder:	nie-threadsafe wersja StringBuffera - szybsza ale tylko
+						przy aplikacjach jednowątkowych (kompilator domyślnie używa go przy "+")
+	StringBuilder i StringBuffer wewnętrznie przechowuja tablicę charów.
+
+3.	Co to jest i jak działa GC
+	Garbage Collector jest to Daemon thread działający cały czas w tle JVM,
+	który na celu ma dekstrukcję niepotrzebnych obiektów i zwalnianie miejsca w Heapie. 
+	GC usuwa elementy które są "unreachable". Możemy sprawić że obiekt jest unreachable poprzez:
+		-	znullowanie referencji do niego
+		-	nadpisaniem refefencji do niego
+		-	jeżeli obiekt tworzony jest wewnątrz metody
+		-	Island of Isolation (kiedy dwa obiekty wskazują jedynie na siebie, bez referencji zewnętrznych)
+	Przed usunięciem obiektu GC wywołuje na nim metodę `finalize()`.
+	GC jest wywoływany wtedy kiedy JVM zdecyduje że trzeba zwolnić pamięć na Heapie
+	Metody `System.gc()` oraz `Runtime.gc()` wysyłają zapytanie do GC, ale nie dają 100% pewności,
+	że GC zadziała w tym momenciel.
+
+4.	Czym jest JVM
+	Jest to wirtualna maszyna która pozwala komputerowi na odpalenie programów,
+	które zostały skompilowane do Java bytecodu. Dzięki konkretnym specyfikacjom, które
+	musi spełniać każda JVM autorzy programów mogą mieć pewność że ich program będzie działał
+	tak samo na większości urządzeń. 
+
+5.	Różnica między JDK, JRE, JVM
+	JVM opisano na górze
+	JRE - Java Runtime Enviroment - środowisko do odpalnia programów Java
+	JDK - Java Development Kit - 	oprócz środowiska do odplania programów
+									posiada również narzędzia pozwalająca na ich tworzenie
+
+6.	Czy Java jest w 100% obiektowa
+	Nie.
+	 -	używamy w niej typów prostych jak int, double itd
+	 -	istnieje keyword `static` któro umozliwia dostęp do metod klasy bez tworzenia z niej obiektu
+
+7.	Czym jest konstruktor
+	Konstruktor jest metodą, którą musi posiadać każda klasa i służy do tworzenia
+	nowych obiektów na podstawi tej klasy używając słowa kluczowego `new`
+	Każda klasa ma w sobie domyślny konstruktor, który ustawia polom klasy jej domyślne wartości.
+	Konstruktor jako metoda nic nie zwraca i musi się nazywać tak jak klasa którą tworzy.
+
+8.	Różnica między `equals()` a `==`?
+	`equals()` prównuje wartości obiektów używając wbudowanych w ich klasy metod `equals()`
+	`==` porównuje referecje do miejsc w pamięci,
+		 czy porównywane zmienne wskazują na ten sam obszar pamięci
+
+9.	Przeciążanie (overloading) i przesłanianie (overriding)
+	-	Overloading metody polega na stworzeniu nowej metody o takiej samej nazwie,
+		ale innej sygnaturze - inne parametry, inne ciało, inny typ zwracany
+	-	Overriding - pojawia się przy dziedziczeniu albo implementacji interfejsów
+		polega na "nadpisaniu" dziedziczonej lub implementowanej metody nowym ciałem.
+		Parametry i typ zwracany metody pozostają bez zmian (typ zwracany może być
+		podtypem tego co zwraca overridowana metoda
+
+10.	Słowo kluczowe `volatile`
+	Jeżeli mamy przypadek kiedy jeden wątek zmienia zmienną, a inny ją odczytuje
+	wątek odczytujący może wziąć wartość zmiennej zanim wątek nadpisujący zdąży przenieść
+	jej zaktualizowaną wartość z pamięci cache CPU do głównej pamięci programu.
+	Słowo `volatile` zapewnia że zmianny wartośći będą od razu zapisanywane do głównej pamięci,
+	i odczyt zmiennej będzie zawsze się pokrywał z jej aktualną wartością.
+
+11.	sleep() oraz wait()
+	`sleep()` używa się aby wstrzymać działanie wątku na określoną ilość czasu
+	`wait()` wstrzymuje działanie wątku aż go wybudzimy `notify()` lub `notifyAll()`
+	Ważną różnicą jest to że `wait()` zwalnia lock trzymany przez wątek, a `sleep()` nie.
+	`wait()` użyjemy w aplikacji wielowątkowej do komunikacji między wątkami, `sleep()` 
+	po prostu do wstrzymania działania aplikacji na jakić czas.
+
+12.	Reflection w Javie
+	Reflection polega na zdolności programu do "introspekcji" czyli dostępu do metod i pól
+	obiektów na podstawie referencji do nich. Możemy też używać obiektów, których definicji
+	nie znamy w momencie pisania kodu. Możemy np. pobrać klasę obietu używając `getClass()`
+	albo tablicę metod używając `getMethods()`. 
+	Dzięki temu program może być modyfikowany w trakcie działa w sposób zależny od 
+	własnego kodu.
+
+13.	Czym jest servlet?
+	Jest to częśc aplikacji po stronie servera, która służy jako most między zapytaniami HTTP
+	a logiką biznesową aplikacji.
+
+14.	Dlaczego metoda `main` jest statyczna?
+	Żeby JVM mogła ją wywołać bez tworzenia nowego obiektu z klasy ją zawierającej
+
+15.	Czym jest wyjątek?
+	Wyjątek jest to błąd, niespodziewana sytuacja w działaniu programu. Wszystkie wyjątki
+	dziedziczą na nadklasy `Throwable` i dzielą się na `checked` i `unchecked`.
+	- `checked`: 	są sprawdzane w czasie kompilacji i nie pozwalają nam skompilować programu
+					jeżeli nie będą obsłużone
+	- `unchecked`:	np. RuntimeException albo NullPointery - występują już w trakcie działania
+					programu
+
+16.	Co to jest enkapsulacja?
+	Jest to proces ograniczania dostępności danych, tak aby dostęp do nich był kontrolowany
+	przez twórcę programu i możliwy tylko z przewidzianych przez niego miejsc. 
+
+17.	Różnica między `throw` a `throws`
+	- `throw` 	używa się w ciele metody kiedy chcemy wymusić rzucenie danego wyjątku
+	- `throws` 	używa się przy definicji metody żeby zaznaczyć że przy korzystaniu z niej
+				konieczna będzie obsługa tego wyjątku
+
+18. Wyjątki `checked` a `unchecked`
+	`checked` sa sprawdzane na etapie kompilacji i wymagają obsłużenia przed skompilowaniem programu
+	`unchecked` występują na etapie działania programu i ich wystąpienie powinno być przewidziane w kodzie
+
+19.	Różnice między .jar a .war
+	.jar służy do przechowywania klas, bibliotek i zasobów potrzebnych do działania aplikacji Java
+	.war służy konkretnie do przechowywania aplikacji webowych z servletwami i będzie w sobie zawierał 
+	konkretną strukturę danych tzn. WEB-INF itd. War będzie też zawierał widoki, jspeki, javascript itd.
+
+20.	Czy możemy mieć obiekt którzy jest immutable zawierający obiekt mutable?
+	Tak. Przykład poniżej:
+	//Person jest mutable, bo mamy dostęp do jej pól i możemy je zmieniać
+		public final class Person(){
+			public int age;
+		}
+
+	// personRecord jest immutable bo mimo że zawiera mutable obiekt Person
+	// to nie mamy do niego dostępu 
+		public final class personRecord(){
+			private final Person person;
+		}
+
+21.	Dlaczego String jest immutable?
+	a)	Bezpieczeństwo
+		Gdyby String był mutable to możnaby zmienić jego zawartość w trakcie działania metody
+		na przykład weryfikującej czy nie jest to SQL Injection. 
+	b)	Synchronizacja
+		Dzięki byciu immutable String jest thread-safe i może być dzielony między wielona
+		threadmi.
+	c) 	Cachowanie Hashcode
+		HashCode dla danego Stringa moze być ustalony tylko raz i używany potem dowolną ilośc razy,
+		bez ryzyka że zawartość obiektu się zmieni
+	d)	Wydajność
+		Dzięki istnieniu String Poola (nie mógłby istnieć jeżeli String byłoby mutable)
+		oszczędzamy miejsce na Heapie i mamy szybszy dostęp do hashy kiedy używamy String.
+
+22.	Różnica między stosem a stertą
+	- 	Sterta "Heap"  to duży obszar pamięci w którym znajdują się stworzone obiekty i referncje
+		z nich wychodzące. Składa się z trzech częsci: Young Generation, Old Generation, Permanent Generation
+		Young - tu sa najnowsze obiekty, minor garbage collection czyści tę pamięć i przesuwa obiekty to OG
+		Old -  tu są obiekty które przeżyły kilka mniejszych GC. 
+		Permantn - tu sa trzymane metadane JVM, klasy i metody
+	-	Stos "Stack" to mniejszy obszar pamięci, w którym trzymane są typy proste które są używane
+		w danym scopie programu. Rozmiar stacka zmnienia się w zależności od tego ile zmiennych
+		musi pomieścić. LIFO - Last-In-First-Out - kiedy pojawia się nowa zmienna do wskakuje
+		ona na górę stosu pamięci i jako pierwsza go opuszcza. 
+
+23.	ArrayList vs LinkedList vs Vector
+	-	ArrayList - rozbudowana tablica, pozwala na dodawanie i odejmowanie obiektów oraz
+		na dostęp do nich przez podanie ich indeksu. Przy dodaniu obiektu zwięszka rozmiar o 50%.
+	-	LinkedList - implementacja double-linked-list. Każdy obiekt w liście zawiera informacje
+		o sobie, jak i obiekcie go poprzedzającym i następnym. Lepsza wydajność dodawania i usuwania
+		niz ArrayList, gorsza wyszukiwania
+	-	Vector - thread-safe ArrayList. Podwaja swój rozmiar przy dodaniu obiektu. Może być przechodzony
+		iteratorem albo enumeracją
+
+24.	HashTable vs HashMap
+	-	HashTable - synchronizowana, nie pozwala na `null` ani jako klucz, ani wartość
+	-	HashMap - pozwala na jeden klucz `null` i nieskończenie dużo wartości `null`
+
+25.	Interfejs vs Klasa abstracyjna
+	Klasa abstracyjna może posiadać metody niedomyślne posiadające logikę biznesową.
+	Klasa abstrakcyjna może posiadac niestatyczne, niefinalne pola.
+	Klasy dziedziczące klasę abstrakcyjną nie muszą implementować jej metod abstrakcyjnych.
+	Z interfejsu nie możemy stworzyć obiektu za pomocą new.
+	Klasy implementujące interfejs musza implementować wszysktie jego metody (oprócz domyślnych).
+	Klasy moga implementować wiele interfejsów, ale dziedziczyć tylko z jednej klasy abstracyjnej.
+
+26.	JIT Compiler (just-in-time-compiler)
+	JIT Compiler jest częścią JVM odpowiedzialną za compilowanie Java bytecodu do czystego
+	machine code. Uruchamiany jest przy każdym wywołaniu metody w Javie, kompilując ją do 
+	kodu maszynowego i uruchamiając "Just-In-Time". Wtedy JVM wywołuje ten kod już bez potrzeby
+	interpretacji bytecode - > machine code, co przyspiesza działanie programu.
+
+27.	Local vs Instance variable
+	-	Zmienna lokalna istnieje jedynie w obrębie metody, konstruktora lub bloku kodu i jest usuwana
+	ze Stacka w momencie opuszczenia przez program danego bloku. Nie jest również dostępna
+	dla metod spoza tego bloku kodu.
+	-	Instancje variable jest silnie powiązana z klasą w której jest zdefiniowana i jest
+	jej właściwością. Definiowane są w obrębie klasy ale poza jej metodami.
