@@ -44,7 +44,6 @@
 6.	Czy Java jest w 100% obiektowa
 	Nie.
 	 -	używamy w niej typów prostych jak int, double itd
-	 -	istnieje keyword `static` któro umozliwia dostęp do metod klasy bez tworzenia z niej obiektu
 
 7.	Czym jest konstruktor
 	Konstruktor jest metodą, którą musi posiadać każda klasa i służy do tworzenia
@@ -174,8 +173,7 @@
 25.	Interfejs vs Klasa abstracyjna
 	Klasa abstracyjna może posiadać metody niedomyślne posiadające logikę biznesową.
 	Klasa abstrakcyjna może posiadac niestatyczne, niefinalne pola.
-	Klasy dziedziczące klasę abstrakcyjną nie muszą implementować jej metod abstrakcyjnych.
-	Z interfejsu nie możemy stworzyć obiektu za pomocą new.
+	ttttterfejsu nie możemy stworzyć obiektu za pomocą new.
 	Klasy implementujące interfejs musza implementować wszysktie jego metody (oprócz domyślnych).
 	Klasy moga implementować wiele interfejsów, ale dziedziczyć tylko z jednej klasy abstracyjnej.
 
@@ -347,7 +345,8 @@
 	Linked list
 
 61.	Czy można przekazywać Optional w argumentach metody?
-	Nie powinno się. Używanie tak Optionali zaciemnia zapis metody,
+	Nie powinno się. Używanie tak Optionali zaciemnia z
+	apis metody,
 	sprawia że działanie metody zależy od wartości optionala,
 	optional w porównaniu do nullowalnych argumentów jest bardziej kosztowny,
 	Optional może reprezentować aż trzy różne stany: null, non-null ale isPresent = false,
@@ -376,6 +375,8 @@
 	- 	Function: przyjmuje jeden argument i zwraca jeden argument
 	-	Customer: przyjmuje jeden argument i nie zwraca nic
 	-	Predicate: przyjmuje jeden argument i wywołuje na nim test logiczny
+	-	Supplier: nie przyjmuej argumentów, i zwraca jeden
+	-	Operator: przyjmuje i zwraca ten sam typ danych
 
 67.	Map vs flatMap w Streamach
 	-	Map służy do mapowania wartości w streamie na inne wartości przy użyciu
@@ -432,3 +433,71 @@
 	Nie, o ile metody można overridować to pola w javie są chowane przy dziedziczeniu.
 	Dzięki temu mamy dostęp i do pól nadklasy przez `super()` i subklasy przez `this()`
 
+73.	Bubble sort
+	Idziemy po kolei po ciągu liczb sprawdzając czy liczba na miejscu `i` jest większa
+	od liczby na miejscu `i+1`. Jeżeli tak to zamieniamy je miejscami. W ciągu `n-1` iteracji
+	(gdzie n jest ilością elementów) powinniśmy uzyskać posortowany ciąg. 
+	Przy każdej iteracji największa nieposortowana liczba będzie "płynęła" na koniec ciągu,
+	ustawiając go w kolejności od najmniejszej do największej.
+	*	Usprawnienie: dodać flagę `boolean swapped = false` która będzie ustawiana na `true`
+		jeżeli w danej iteracji nastąpiła zamiana. Jeżeli nie, to można uznać że ciąg
+		jest już posortowany.
+		Sprawić żeby algorytm przy każdym przebiegu nie sprawdzał ostatnich, wiadomo że posortowanych
+		elementów ciągu.
+
+74. Wybrane wzorce projektowe
+	*	Wzorce kreacyjne
+		-	Singleton
+			Zapewnia że będzie istniała tylko jedna instancja danego obiektu na ciąg działania 
+			programu. Obenie uważany za antywzorzec.
+			1.	Prywatny konstruktor, żeby uniemożliwić tworzenie większej ilości obiektów
+			2.	`public static final` pole o klasie takiej samej jak singleton
+			3.	`public static` metoda która zwraca instancję klasy
+
+		-	Fabryka
+			Fabryka polega na oddelegowaniu zadania tworzenia obiektów z głównej logiki programu
+			na specjalną klasę. Klasa ta będzie generowała nowe obiekty w zalezności od 
+			przekazanych jej parametrów. Fabryka może być np. Singletonem, lub posiadać statyczne
+			metody odpowiedzialne za tworzenie obiektów.
+		
+		-	Abstrakcyjna fabryka
+			"Fabryka fabryk". Wzorzec polega na tym, żeby tworzyć wiele implementacji abstrakcji
+			odpowiedzialnej za tworzenie obiektów i potem fabryka zwraca nam te implementacje,
+			czyli konkretne fabryki odpowiedzialne za tworzenie obiektów rządnego typu.
+			
+		- 	Builder
+			Pattern służący do tworzenia obiektów o dużej ilości opcjonalnych pól. Po części
+			rozwiązuje problemy, jakie mają z nimi fabryki. Builder pozwala tworzyć obiekt
+			krok po kroku, wypełniając każde pole oraz posiada metodę zwracającą gotowy obiekt.
+
+		-	Prototyp
+			Wzorzec używany kiedy tworzenie nowych pełnych obiektów kosztuje zbyt dużo czasu i zasobów,
+			a istnieje już w programi podobny obiekt. Wtedy kopiujemy ten obiekt i modyfikujemy go
+			w zależności od naszych potrzeb. Obiekt klonujemy metodą `clone()` wczesniej implementując
+			interfejs Cloneable. Możemy użyć deep lub shallow copy. 
+
+	*	Wzorce strukturalne
+		-	Adapter
+			Służy do łączenia dwóch niezwiązanych ze sobą interfejsów. Taki adapter służyć będzie
+			do konwersji jednego interfejsu w interfejs oczekiwany przez klienta.
+
+	*	Wzorce behawioralne	
+		-	Chain of Resposibility
+			Grupa obiektów która między sobą na rozwiązać pewien problem. Jeżeli jeden z tych obiektów
+			nie może rozwiązać problemu, zostaje on przekazany dalej w łańcuchu.
+		-	Observer
+			Obiekt posiada "subskrybentów" (obserwatorów) swojego stanu i może ich informować
+			o zmianach w nim.  Subskrybenci nie wysyłają zapytań do obiektu, tak więc
+			pozwalają mu spokojnie pracować i czekają na wybudzenie przez ten obiekt.
+
+	*	Inne
+		-	MVC
+			Wzorzec polegający na rozdzieleniu logiki aplikacji webowej na odpowiednie części:
+			- Model:	Dane aplikacji, tu umieszczona jest logika odpowiedzialna np.
+						za komunikację z bazą danych i dostarczenie tych danych do 
+						kontrolera.
+			- Controller:	Część programu służąca za most między zapytaniami i danymi
+							pobieranymi z Widoku a modelem. Są to często zestawy kontrolerów
+							obsługujących zapytania RESTowe.
+			- View:		front-end, część programu z która bezpośrednio oddziaływuje użytkownik
+						aplikacji webowej (jeżeli nie wysyła czystych zapytań RESTowych)
