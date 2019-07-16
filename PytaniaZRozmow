@@ -1,0 +1,23 @@
+== 4 FINANCE ==
+1.	Czy można przekazywać Optional w argumentach metody?
+2.	Skoro nie to jak można obsłużyć zmienną która może być nullem?
+3.	Jaka lista jeżeli chcę dodawać dane zawsze na początku?
+4.	Co to jest LinkedList?
+5.	Co wprowadziła Java 8?
+6.	Trzy interfejsy funkcyjne i opisać je
+7.	Map vs flatMap w Streamach
+8.	Jak sprawić żeby obiekt był Immutable?
+9.	Jak przekazać do obiektu immutable przez konstruktor np. mapę?
+10.	Jak działa HashMapa?
+11.	Czy można dodać do HashMapy dwa klucze o tym samym hashu?
+12.	Jak definiujemy beany w Springu?
+13.	Dlaczego powstał SpringBoot?
+14.	Różnica między Post a Put, czy Putem możemy umiesczać nowe dane na serwerze?
+15.	Annotacje @Controller, @Repository, @Service - co oznaczają pod maską?
+16.	Obsługa wyjątków w Springu
+17.	Optimistic vs Pesimistic locking w Hibernate
+18.	Kiedy Hibernate rzuca LazyInitializationException
+19.	Kiedy używać indeksowania baz danych
+20.	Wady indeksowania
+
+

@@ -187,7 +187,156 @@
 
 27.	Local vs Instance variable
 	-	Zmienna lokalna istnieje jedynie w obrębie metody, konstruktora lub bloku kodu i jest usuwana
-	ze Stacka w momencie opuszczenia przez program danego bloku. Nie jest również dostępna
-	dla metod spoza tego bloku kodu.
+		ze Stacka w momencie opuszczenia przez program danego bloku. Nie jest również dostępna
+		dla metod spoza tego bloku kodu.
 	-	Instancje variable jest silnie powiązana z klasą w której jest zdefiniowana i jest
-	jej właściwością. Definiowane są w obrębie klasy ale poza jej metodami.
+		jej właściwością. Definiowane są w obrębie klasy ale poza jej metodami.
+
+28.	Constructor chaining
+	Wyołowywanie jednego konstruktora z drugiego. Możemy go używać do wywołania konstruktora
+	z nadklasy słowem `super()`, lub wywoływać inne konstruktory w obrębie danej klasy używając `this()`
+
+29.	Classloader
+	Część JVM odpowiedzialna na ładowanie klas podczas egzekucji programu. Klasy są ładowane on demand.
+	Kiedy włączamy JVM używane są trzy classloadery:
+		- Bootstrap class loader
+		  ładuje podstawowe biblioteki java znajdujące się w <JAVA_HOME>/jre/lib
+		- Extensions class loader
+		  ładuje dodatkowe klasy umieszczone w jre/lib/ext albo w katalogach
+		  określonych w właściwości java.ext.dirs
+		- System class loader
+		  ładuje klasy, które znajdują się w CLASSPATH
+
+30.	HashSet vs TreeSet
+	- 	HashSet: dopuszcza nulle, jest nieposegregowany
+	-	TreeSet: niedopuszcza nulli, jest posegregowany
+
+31.	Interfejsy i Klasy dostępne w Collections
+	-	Interfejsy: 
+			-	Collection
+			-	List
+			-	Set
+			-	Sorted Set
+			-	Map
+			-	Sorted Map
+			-	Queue
+	-	Klasy:
+			-	ArrayList
+			-	LinkedList
+			-	Vector
+			-	HashSet
+			-	LinkedHashSet
+			-	TreeSet
+			-	HashMap
+			-	LinkedHashMap
+			-	TreeMap
+			-	HashTable
+
+32.	Ordered vs Sorted
+	-	Ordered: kolekcja przetrzymuje dane w kolejności w której zostały dodane
+	-	Sorted: kolekcja sortuje dane na podstawie danego kryterium
+
+33.	Priority Queue
+	-	Specjalny typ Queue gdzie wszystkie elementy są ordered używając natural ordering
+		lub Comparatora użytego przy tworzeniu kolekcji
+	-	Przechowuje obiekty w kolejności rosnącej gdzie czoło kolejki stanowi obiekt o
+		najniższej wartości 
+
+34.	Exception propagation
+	Jeżeli wyjątek nie jest obsłużony zostaje rzucony dalej po stacku aż do momentu
+	gdzie zostanie obsłużony lub wykrzaczy nam program.
+
+35. Czym jest thread
+	Thread to ciąg instrukcji wykonywanych przez javę. Kontroluje flow wykonania programu. 
+	Każdy program Java ma przynajmniej jeden thread (main). 
+	Tworzenie nowego Threada odbywa się albo przez implementację interfejsu Runnable
+	albo przez dziedziczenie z klasy Thread. Dzięki temu musimy zaimplementować
+	metodę run() w której podajemy przebieg danego wątku, a następnie możemy go wywołać 
+	metodą start().
+
+36. Thread.join()
+	Metoda służy do synchronizacji wątków. Sprawia że obecny thread będzie czekał na 
+	wykonanie się threadu na którym metoda została wywołana.
+
+37.	Thread.yield()
+	Po wywołaniu daje znać thread scheadulerowi że dany wątek jest gotowy oddać zasoby
+	jeżeli pojawi się ważniejszy wątek ich potrzebujący
+
+38.	Thread.wait()
+	Zatrzymuje działanie wątku zwalniając wszystkie trzymane przez niego locki.
+	Obowiązuje aż do wywołania metody notify() lub notifyAll()
+
+39.	notify() notifyAll()
+	Wybudza albo konkretny albo wszytskie wątki w waiting poolu
+
+40.	sleep()
+	Usypia wątek na określoną ilość czasu, ale nie zwalnia trzymanych przez niego locków
+	
+41.	Life cycle wątków
+	- 	New:	wątek stworzony, metoda start() nie wywołana
+	- 	Runnable:	metoda start() wywołana, ale jeszcze nie dotarło do metody run()
+	- 	Running: metoda run() w trakcie wykonywania
+	-	Non-runnable (blocked): wątek jest runnable ale jego wykonywanie zostało zablokowane
+	- Terminated: metoda run() dobiegła końca
+
+42.	Transient zmienna
+	Wartość zmiennej opisanej jako transient nie będzie brana pod uwagę przy serializacji obiektu
+
+43.	serialVersionUID
+	static final long zmienna służaca do identyfikacji zserializowanego obiektu. 
+
+44.	Czym jest dynamic polymorphism lub dynamic method dispatch
+	Kiedy wywołanie zoverridowanej metody odbywa się w momencie runtime a nei kompilacji
+	np:
+		List<String> list = new ArrayList<>();
+		list.add("foo");
+	Po lewej stronie jest interface, po prawej jest jego implementacja
+
+45.	Typy dziedziczenia 
+	-	Pojedyncze: jedna klasa dziedziczy z jednej klasy
+	-	Multilevel:	jedna klasa dziedziczy z klasy, ta klasa z innej klasy itd
+	-	Hierarchical: z jednej klasy dziedziczy kilka klas
+	-	Hybrid: połączenie powyższczych
+
+46.	Method hiding
+	Nie jest możliwe overridowanie metod statycznych lub prywatnych z nadklasy,
+	kiedy próbujemy to robić to następuje mehtod hiding - ukrywanie że nadklasa 
+	ma w ogóle taką metodę
+
+47.	Association, Aggregation, Composition
+	-	Association jest to dowolny związek między dwoma lub wieloma klasami, powiązanie w dowlny sposób.
+	-	Aggregation (has-a) jest to silniejszy typ asocjacji gdzie jeden obiekt przechowuje w sobie
+		dane o drugim, ale oba mogą istnieć niezaleznie od istnienia drugiego obiektu.
+	-	Composition (is-a-part-of) to najsilniejszy typ asocjacji gdzie usunięcie jednego obiektu
+		powoduje desktrucję pozostałych
+
+48.	Marker interface
+	Jest to interfejst nieposiadający w ogóle działa, służący jedynie oznaczeniu ze dana
+	klasa będzie "jakaś" np:
+		public interface Seriazible(){
+		}
+
+49. Lazy loading vs eager loading
+	Lazy loading jest to wzorzec projektowy w którym pełną inicjalizację obiektów odraczamy tak długo,
+	jak tylko jest to możliwe, co przyczynia się do poprawy wydajności aplikacji.
+
+50.	SOLID
+	-	Single responsibility principle
+		Klasa powinna mieć tylko jedną odpowiedzialność
+		"A class should have one, and only one, reason to change"
+	-	Open/closed principle 
+		Tworzenie klas tak żeby można było rozszerzać ich funkcjonalność bez nadmiernego 
+		modyfikowania istniejącej już logiki
+		Open for extension, closed for modyfication.
+	-	Liskov substitution principle
+		Klasy powinny być tak zbudowane że powinno być możliwe podmienienie obiektów z klas bazowych
+		na obiekty z klas pochodnych bez wyoływania błędów w programie
+	-	Interface segregation principle
+		Lepiej tworzyć więcej bardziej szczegółowych interfejsów niż jeden ogólny
+	-	Dependency inversion principle
+		"high level object should not depend on low level implementations, they should
+		both depened on abstracions"
+
+51.	Jakiej listy użyję żeby dane dodawać np zawsze na początku
+	Linked list
+
