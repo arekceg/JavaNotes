@@ -1,0 +1,96 @@
+== DUŻE O ==
+
+-	O(f(n)) gdzie f(n) oznacza funkcję, która opisuje jak czas wykonania algorytmu 
+	skaluje się w stosunku do pewnych zmiennych. Z definicji:
+		Notacji duże-O używamy do ograniczenia asymptotycznego tempa wzrostu
+		czasu wykonywania algorytmu od góry za pomocą stałych współczynników.
+		Oznacza to że czas nie może przekroczyć f(n), ale może być mniejszy.
+
+-	O lub O(1):	stały czas wykonania algorytmu niezaleznie od danych
+-	O(n):	czas wykonania skaluje się liniowo w stosunku do danych (np. do wielkości tablicy)
+			jeżeli czas wykonania algorytmu wychodzi np. O(2n) (bo np. przechodzimy
+			dwa razy po tej samej tablicy) to nie zapisujemy tych sałych przed N.
+			O(2n) zapisujemy jako O(n)
+-	O(n^2):	czas skaluje się ekspotencjalnie (np w przypadku zagnieżdzonych pętli)
+
+-	Jeżeli algorytm ma więcej niż jeden krok to dodaje się do siebie czasy wykonywania
+	tych czynności, np:
+		stepOne(); //O(a)
+		stepTwo(); //O(b)
+	w sumie da czas O(a+b)
+
+-	Jeżeli algorytm ma różne zmienne, np dwie różne tablice to musimy im przypisać
+	inne wartości n. Na przykład
+		arrayA //length = a
+		arrayB //length = b
+	czas = O(a*b) lub O(a+b)
+
+-	Jeżeli notacja wymagałaby zapisu np. O(n+n^2) to wtedy opuszczamy tę mniejszą wartość, więc
+	O(n+n^2) -> O(n^2)
+
+-	Skróty (nie zawsze działaja ale ułatwiają)
+	-	Działania arytmetyczne mają O(1). Dodawanie, odejmowanie itd. wszystkie mają stały
+		czas wykonywania, niezależny od wielkości zmiennych
+	-	Definiowanie zmiennych ma czas O(1)
+	-	Pobieranie obiektów z tablicy po indeksie jest O(1)
+	-	Czas wykonywania pętli to najczęściej długość pętli * czas wykonywania komend w pętli
+
+== ALGORYTMY SORTUJĄCE ==
+
+-	Bubble sort
+	-	Idziemy po kolei po ciągu liczb sprawdzając czy liczba na miejscu `i` jest większa
+		od liczby na miejscu `i+1`. Jeżeli tak to zamieniamy je miejscami. 
+	-	W ciągu `n-1` iteracji (gdzie n jest ilością elementów) powinniśmy uzyskać posortowany ciąg.
+	-	Przy każdej iteracji największa nieposortowana liczba będzie "płynęła" na koniec ciągu,
+		ustawiając go w kolejności od najmniejszej do największej.
+	-	Średnia złożoność czasowa: O(n^2)
+		Średnia złożoność pamięciowa: O(1)
+
+	*	Usprawnienie: dodać flagę `boolean swapped = false` która będzie ustawiana na `true`
+		jeżeli w danej iteracji nastąpiła zamiana. Jeżeli nie, to można uznać że ciąg
+		jest już posortowany.
+		Sprawić żeby algorytm przy każdym przebiegu nie sprawdzał ostatnich, wiadomo że posortowanych
+		elementów ciągu.
+
+-	Insertion sort
+	-	Dzielimy zbiór na dwie częsci - posortowaną i nieposortowaną. Na początku częśc "posortowana"
+		to będzie tylko wartość o indeksie 0
+	-	Zapisujemy w tempie pierwszą wartość z częsci nieposortowanej - o indeksie i+1 gdzie i to numer
+		iteracji.
+	-	Sprawdzamy czy wartość w tempie jest mniejsza czy większa od kolejnych wartości w części 
+		posortowanej. Jeżeli nie to obiekt z części posortowanej przesuwamy o jeden w prawo i sprawdzamy
+		kolejną wartość.
+	-	Wartość z temp wstawiamy w miejsce gdzie następna wartość jest mniejsza niż wartość z temp
+	-	Średnia złożonośc czasowa: O(n^2)
+		Ale algorytm działa bardzo szybko przy danych już wstępnie posortowanych - O(n)
+		Średnia złożoność pamięciowa: O(1)
+
+-	Quicksort
+	-	Działa na zasadzie "divide and conquer", czyli rozbija się problem na mniejsze elementy
+		i dopiero je rozpatruje
+	-	Ustalamy `pivot` czyli wartość, która będzie naszym punktem odniesienia
+		Na przykład losowo, lub zawsze ostatni element zbioru
+	-	Ustawiamy `granicę` która będzie nam później dzieliła problem na dwie części
+		Zaczynamy od ustawienia jej przed pierwszym elementem zbioru
+	-	Porównujemy pivot z kolejnymi wartościami na prawo od granicy
+		-	Jeżeli wartość jest większa niż pivot to granica zostaje gdzie była
+			i nie wykonujemy więcej operacji
+		-	Jeżeli wartość jest mniejsza niż pivot to przenosimy ją na prawo od granicy (zamieniamy
+			z pierwszym elementem na prawo od granicy) i przesuwamy granicę o jeden w prawo
+	-	Kiedy dojdziemy do pivota nie porównujemy go samego ze sobą
+	-	Zamieniamy pierwszy element na prawo od granicy z pivotem
+		W tym momencie mamy pewność że elementy na lewo od pivota są od niego mniejsze,
+		a na prawo - większe, więc wiemy że pivot znajduje się na odpowiadającej mu pozycji
+	-	`Przecinamy` nasz zbiór na prawo od pivota i rekurencyjnie
+		przeprowadzamy cały proces jeszcze raz dla dwóch otrzymanych podzbiorów
+		(pivota nie bierzemy pod uwagę)
+	-	W podzbiorach tak samo - ustawiamy pivot jako ostatnią wartość zbioru i przechodzimy przez
+		algorytm jeszcze raz
+	-	Średnia złożoność czasowa: O(nlog(2)n)
+		Pesymistyczne: O(n^2)
+		Średnia złożoność pamięciowa: O(log(2)n)
+
+	*	Usprawnienia:
+		-	Wywoływanie rekurencyjne zawsze najpierw dla mniejszego podbioru
+		-	Dla małych (~10 elementów) podzbiorów wywoływanie Insert Sortu 
+			pozwoli nawet doprowadzić do złożoności czasowej O(n) dla tego podzbioru
