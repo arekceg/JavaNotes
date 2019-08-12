@@ -1,0 +1,123 @@
+== ZNACZĄCE NAZWY ==
+
+-	Jedno słowo na jedno abstracyjne pojęcie
+	nie używać naprzemiennie np. `fetch` `get` `retrieve`
+
+-	Nie używać tego samego pojęcia dla różnych zagadnień
+	składowa nazwy funkcji powinna pokrywać się z inną jedynie
+	jeżeli ich implementacje są takie same
+
+==	FUNKCJE ==
+
+-	MAŁE FUNKCJE
+	Funkcje powinny być jak najmniejsze. Powinny być *mniejsze niż są*.
+
+-	JEDEN POZIOM ABSTRAKCJI
+	W funkcjach nie powinno być więcej niż jednego poziomu abstrakcji.
+	Jeżeli funkcja zawiera więcej niż dwa wcięcia to prawdopodobnie
+	da się z niej wydzielić metodę pomocniczą.
+
+-	JEDNA RZECZ 
+	Funkcja powinna wykonywać JEDNĄ RZECZ i robić to dobrze
+
+-	KOD PISANY OD GÓRY DO DOŁU
+	Kod powinien być pisany od góry do dołu
+	Kolejne funkcje i kolejne poziomy abstrakcji powinny po sobie postępować
+	od góry do dołu
+
+-	SWITCH i łańcuchy IF-ELSE
+	Należy w miare możliwości umieszczać je np. w abstrakcyjnych fabrykach
+	bo sama w sobie może naruszać SRP oraz OCP
+
+-	JAK NAJBARDZIEJ OPISOWE NAZWY
+	Należy stosować jak najbardziej opisowe nazwy funkcji które
+	dokładnie opiszą co dana funkcja robi i co się wewnątrz niej dzieje.
+
+-	JAK NAJMNIEJ ARGUMENTÓW
+	Jak najmniej argumentów w funkcji. Idealnie 0, dobrze 1, niedobrze 2,
+	3 i więcej wymagają bardzo konkretnego uzasadnienia.
+	Im więcej argumetnów tym trudniej testować i trudniej jest zrozumieć
+	funkcję osobie ją czytającą.
+
+-	ZWRACANIE WARTOŚCI NIE ARGUMENTÓW
+	Należy unikać funkcji jednoargumentowych które zamiast zwracać wartość
+	używają argumentów wyjściowych modyfikując w trakcie przebiegu
+	argument wejściowy. Zamiast zwracać void i modyfikowac obiekt przekazany
+	do funkcji lepiej jest zmodyfikować taki obiekt i zwrócić go.
+
+-	ARGUMENTY ZNACZNIKOWE
+	Należy unikać argumetnów znacznikowych w funkcjach - często zaciemniają
+	obraz funkcji i dają do zrozumienia ze dana funkcja nie spełnia SPR:
+	inne polecenia wykonywane są dla `true` i inne dla `false`. 
+	Lepiej jest zrobić dwie różne funkcje.
+
+-	ZAMIANA ARGUMENTÓW NA OBIEKTY
+	Jeżeli do funkcji musimy przekazać więcej argumentów niż 2,3 to warto
+	spróbować sensownie opakować częśc tych arugmentów w nową klasę.
+
+-	ARGUMENTY W NAZWIE FUNKCJI
+	Czasami umieszczanie argumentów w nazwie funkcji
+	może poprawić jej czytelność, np:
+		assertEquals(expected, actual);
+		assertExpectedEqualsActual(expected,actual);
+	
+-	WYODRĘBNIANIE TRY-CATH
+	Bloki `try-catch` naruszają strukturę kodu i mieszają przetwarzanie
+	błędów ze zwykłym przetwarzaniem. Dlatego zawartość bloków `try` i `catch`
+	dobrze jest wyodrębnić do oddzielnych funkcji
+
+-	OBSŁUGA BŁĘDÓW JEDNĄ OPERACJĄ
+	Funkcja powinna robić tylko jedną rzecz - jeżeli jest to obsługa błędów
+	to funkcja powinna robić tylko to a resztę logii oddelegować do funkcji
+	z niej wywoływanych 
+
+==	KOMENTARZE ==
+
+-	Zamiast pisać komentarze lepiej to samo wyrazić w kodzie.
+	Komentarze są problematyczne bo mogą się szybko zdezaktualizować,
+	mogą, po refaktoringu kodu, być na złym miejscu itp. 
+
+-	Dobry kod sam wyjaśnia to co robi bez potrzeby komentowania.
+
+-	WYJĄTKI:
+
+	-	Komentarze wyjaśniające podejątą decyzję
+		Czego często nie da się wyrazić kodem
+
+	-	Komentarze ostrzegawcze
+		np. że dany test zajmuje dużo czasu
+
+	-	Komentarze TO-DO
+		Notatki "do zrobienia" - możemy oznaczyć np prośby do innych 
+		programistów pracujących na tym kodzie, opisać dlaczego
+		funkcja ma zdegenerowaną logikę itd. 
+		NIE SĄ wymówką do pozostawienia złego kodu w programie
+
+-	Szum informacyjny
+	Komentarze opisujace rzeczy oczywiste
+
+-	Komentarze przy klamrach zamykających mogą sprawdzić się w długich
+	dużych funkcjach (których i tak należy unikać) ale w małych
+	zaciemniają tylko czytanie kodu
+
+-	Dopiski w stylu 
+	 // Arek to dodał
+	Powinny być załatwiane przez VCS a nie komentarze
+
+-	Dead code
+	Komentowanie nie używanego kodu wprowadza tylko konfuzję,
+	osoba czytająca taki kod nie wie czy został on zakomentowany
+	tymczasowo, czy jest wazny, czy to jakiś zupełny staroć 
+	do usunięcia.
+	W czasach tak rozwiniętych VCS nie ma już potrzeby zostawnia
+	zakomentowanego, martwego kodu.
+
+-	Nie pisać komentarzy wymagających dodatkowych objaśnień
+	Jeżeli już musimy pisać komentarz upewnijmy się że jest on tak
+	self-contained jak się tylko da i wyjaśnijmy w nim
+	wszystkie elementy mogące budzić wątpliwości
+
+==	OBIEKTY I STRUKTURY DANYCH	==
+
+-	Nie należy na ślepo dodawać getterów i setterów,
+	lepiej dodać abstakcję pozwaljacą na manipulację *istotą* danych

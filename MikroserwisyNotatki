@@ -1,0 +1,33 @@
+== SERVICE DISCOVERY ==
+
+=	CLIENT SIDE SERVICE DISCOVERY =
+
+-	Trzeba stworzyć dodatkowy element: Discovery Server
+	który będzie rejestrował wszystkie dostępne serwisy
+	i udostępniał ich adresy clientowi. 
+	Po otrzymaniu adresu klient wywołuje na serwisie
+	swoje zapytanie
+
+-	Spring Cloud domyslnie używa tego
+
+=	SERVER SIDE SERVICE DISCOVERY	=
+
+-	W tym wypadku samo zapytanie jest wysyłane do
+	Discovery Servera i on potem wywołuje odpowiedni service
+
+=	EUREKA SERVER	=
+
+-	Eureka to biblioteka open source stworzona przez Netflixa
+	służaca do budowania discovery serverów
+-	Zalezności:
+	-	Spring Cloud
+	-	Eureka Server (uwzględnia Spring Cloud)
+
+-	@EnableEurekaServer
+	//w głównym pliku konfiguracyjnym
+
+-	Aby server nie próbował się zarejestrować sam ze sobą
+	trzeba dodać w application.properties
+		server.address=8761
+		eureka.client.register-with-eureka=false
+		eureka.client.fetch-registry=false
