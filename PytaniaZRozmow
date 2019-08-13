@@ -1,4 +1,4 @@
-== 4 FINANCE ==
+=================================
 1.	Czy można przekazywać Optional w argumentach metody?
 	Nie powinno się. Używanie tak Optionali zaciemnia zapis metody,
 	sprawia że działanie metody zależy od wartości optionala,

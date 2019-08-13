@@ -121,3 +121,88 @@
 
 -	Nie należy na ślepo dodawać getterów i setterów,
 	lepiej dodać abstakcję pozwaljacą na manipulację *istotą* danych
+
+-	PRAWO DEMETER
+	Nie należy pisać kodu który pozwala na tworzenie "pociągów" wywołan metod, np:
+		A().B().C();
+	Należy w miarę mozliwości zrefaktorować to tak, żeby B() posiadało abstrakcję
+	umożliwiającą A() bezpośredni dostęp do tego czego potrzebuje w C()
+	Należy tego prawa używac z rozwagą gdyż może powodować znaczny rozrost klasy B()
+	o metody będace jedynie kanałem przesyłu danych z C().
+
+-	STRUKTURY DANYCH VS OBIEKTY
+	Struktury danych to klasy zawierające jedynie dane, nie posiadające logiki do ich obsługi.
+	Kiedy używamy struktur danych najczęściej używamy programowania proceduralnego,
+	czyli wywoływania procedur na tych strukturach, zamiast metod w nich zawartych.
+
+	Obiekty posiadają pola prywatne, udsostępniając publicznie abstrakcje do manipulacji nimi.
+
+==	OBSŁUGA BŁĘDÓW	==	
+
+-	WYJĄTKI KONTROLOWANE
+	Lipa, bo jeżeli np zdefiniujemy funkcję niskiego poziomu która rzuca wyjątek
+	ale nie możemy tego wyjątku obsłużyć na jej poziomie to siłą rzeczy
+	musimy ten wyjątek przekazywać do góry, do funkcji wyższego poziomu,
+	aż będziemy mogli go obsłużyć. 
+	Powoduje to naruszenie zasady Open-Closed	
+
+-	OBSŁUGA WIELU BŁĘDÓW
+	Jeżeli chcemy obsłużyc wiele błędów, które może rzucić jakaś metoda
+	warto stworzyć klasę opakowującą, która będzie zbierała te błędy w jednym,
+	customowym typie wyjątku, np:
+		class PortOpener {
+			private Port port = new Port();
+
+			try {
+				port.open();
+			} catch (PortExceptionType1 e){
+				logger.log(e.getMessage());
+			} catch (PortExceptionTyp2 e){
+				logget.log(e.getMessage));
+			}
+		}
+	// Można zamienić na:
+		class LocalPortException extends RuntimeException {
+			public LocalPortException(Throwable cause) {
+				super(cause);
+			}
+		}
+
+		class LocalPort {
+			private Port localPort = new Port();
+
+			public void open() {
+				try {
+					localPort.open();
+				} catch (PortExceptionType1 e) {
+					throw new LocalPortException(e);
+				} catch (PortExceptionType2 e) {
+					throw new LocalPortException(e);
+				}
+			}
+		}
+
+		class PortOpener() {
+			private LocalPort localPort =  new LocalPort();
+
+			public void open() {
+				try {
+					localPort.open();
+				} catch (LocalPortException e) {
+					logger.log(e.getMessage, e);
+				}
+			}
+		}
+
+-	Powinno się dążyć do całkowitego rozdzielenia obsługi błędów
+	i logiki biznesowej
+
+-	NIE ZWRACAMY NULLI
+	Zwracanie nulli z metod prosi się tylko o NullPointer.
+	Zamiast zwracać null lepiej zwrócić np. pustą listę, -1,
+	stworzyć jakiś wrapper, a najlepiej to użyć Optionala!
+
+-	NIE PRZEKAZUJEMY NULLI
+	Nie istnieje dobry sposób obsługi nulli przekazywanych do metod.
+	Najbezpieczniejszym sposobem jest pisać metody tak, aby
+	nie było przypadku w którym jako argument zostanie przekazany null.

@@ -1,15 +1,17 @@
 == STACK == 
+
 -	Stack i Heap
 -	Każdy thread ma swój stack
 -	Po wyjściu z danego codeblocku ze stacka usuwane są elementy pamięci,
 	które ten codeblock wykorzystywał
 
-
 == HEAP ==
+
 -	W heapie zawiera się wszystko co nie jest w stackach\
 -	*Wszystkie* obiekty znajdują się w heapie, proste zmienne na stackach 
 
 == OGÓLNE ==
+
 -	Proste obiekty (int, double itd) podawane w metodzie zawsze będą *kopią* tego co się podaje np.
 	static void foo(int bar){
 		bar = bar * 100;

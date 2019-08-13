@@ -28,6 +28,26 @@
 
 -	Aby server nie próbował się zarejestrować sam ze sobą
 	trzeba dodać w application.properties
-		server.address=8761
+		server.porst=8761
 		eureka.client.register-with-eureka=false
 		eureka.client.fetch-registry=false
+
+=	EUREKA CLIENT	=
+
+-	Zależność: Spring-cloud-starter-netflix-eureka-client
+
+-	Annotacja
+	@EnableEurekaClient
+
+-	W application.properties możemy dodać
+		spring.application.name=nazwa-serwisu
+	żeby potem w eurece się wyświetlała nazwa
+
+-	Żeby używać restTemplate z Eureką musimy nad tworzonym restTemplate
+	dodac annotację 
+		@LoadBalanced
+
+-	Wtedy jako URI w restTemplate nie podajemy localhost.. itd
+	tylko
+		http://NAZWA-SERWISU/{...}
+	i Eureka sama już to sobie rozkmini

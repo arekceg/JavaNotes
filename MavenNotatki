@@ -1,4 +1,4 @@
-== set clipboard=unnamedplus=	"When in doubt do Maven Compile"
+== "When in doubt do Maven Compile"
 
 ==	Maven domyślnie używa JDK 1.5 więc trzeba mu wpisać żeby uzywał innej, nowszej wersji:
     <build>
