@@ -206,3 +206,45 @@
 	Nie istnieje dobry sposób obsługi nulli przekazywanych do metod.
 	Najbezpieczniejszym sposobem jest pisać metody tak, aby
 	nie było przypadku w którym jako argument zostanie przekazany null.
+	Jeżeli już musimy dopuścić możliwośc przekazania nulla do metody
+	powinno się napsiać oddzielną metodę
+
+==	GRANICE - ŁĄCZENIE NASZEGO KODU Z KODEM INNYCH OSÓB ==
+
+-	Przy użyciu interfejsów granicznych, takich jak Map lub List
+	należy unikać przekazywania ich samych w obrębie systemu, 
+	a raczej włożyć je w jakieś wrappery, żeby użytkownik
+	nie miał bezpośredniego dostępu np. do metod czyszczących kolekcję
+	lub usuwających z niej dane
+
+-	TESTY UCZĄCE
+	Testy które piszemy aby uczyć się nowego API, sprawdzić czy działa
+	zgodnie z naszymi oczekiwaniami. Zamiast uczyć się tego API na kodzie
+	produkcyjnym, lepiej napisać serię testów, żeby upewnić się że rozumiemy
+	jak dane API funkcjonuje.
+	
+-	KORZYSTANIE Z NIEISTNIEJĄCEGO KODU
+	Jeżeli będziemy korzystać z API, którego jeszcze nie ma, albo którego
+	jescze nie znamy, warto stworzyć interfejs który będzie zawierał 
+	oczekiwane abstrakcje do komunikacji z API. Potem, gdy już otrzymamy
+	API tworzymy adapter między naszym interfejsem, a API - dzięki temu
+	uzyskujemy wygodny, jeden punkt połączenia naszego kodu z kodem zewnętrznym,
+	co pomaga przy aktualizacji programu po ewentualnych zmianach API.
+
+-	CZYSTE GRANICE
+	Powinno się unikać sytuacji gdy nadmiernie dużo naszego kodu
+	polega na szczegółach określonyc w kodzie zewnętrznym. 
+	Można hermetyzować kod używając wrapperów, tworząc dodatkowe interfejsy,
+	co zapewni spójność stylu i nazewnictwa w naszym kodzie i na granicach
+	i zmniejszy ilość miejsc konserwacji kodu w razie wystąpienia błędu.
+
+==	TESTY JEDNOSTKOWE	==
+
+
+-	TRZY PRAWA TDD:
+	1.	Nie piszemy kodu produkcyjnego bez wcześniejszego stworzenia niespełnianego testu jednostkowego.
+	2.	Nie można napisać więcej testów jednostkowych po niespełnieniu
+		testu, a brak kompilacji uznaje się za niespełnienie testu.
+	3.	Nie można pisać więcej kodu produkcyjnego niż jest wymagane
+		do spełnienia napisanego testu.
+	
