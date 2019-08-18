@@ -1,0 +1,78 @@
+== SWAGGER ==
+
+-	Służy do tworzenia dokumentacji opratej o standard Open API
+
+-	Trzeba najpierw zainstalować node.js
+
+-	Potem
+		`sudo npm install -g swagger`
+	Daje nam skrypt do linii komend `swagger`
+
+-	`swagger docs`
+	uruchamia stronę ze specyfikacją Open API
+
+-	`swagger project edit`
+	uruchamia przeglądarkę i ułatwia edycję yamla swaggerowego
+
+==	INTEGRACJA ZE SPRING BOOT ==
+
+-	Zależności:
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+-	Należy stworzyć klasę autokonfiguracyjną do swaggera z annotacją
+	@Configuration
+	@EnableSwagger2
+
+-	W tej klasie definiujemy bean zwracający Docker, konfigurujac
+	tym samym szczegóły swaggera
+	```
+		public Docket api(){
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
+					//mówimy swaggerowi jakie paczki ma skanować
+					//w poszukiwaniu endpointów
+				.apis(RequestHandlerSelectors.any())
+					//mówimy swaggerowi jakie ścieżki endpointów
+					//ma uwzględniać
+				.paths(any())
+				.build();
+		}
+	```
+-	Dokumentacja domyślnie dostepna pod:
+		http://localhost:${server.port}/swagger-ui.html
+
+
+==	DODATKOWA KONFIGURACJA W SPRING BOOT	==
+
+-	Na builderze Docketa możemy wywołać metodę .apiInfo(ApiInfo apiInfo) i przekazać
+	jej nasze customowe info
+
+-	Aby zmienić nazwy metod wyświetlane w dokumentacji nad endpointami dajemy annotację
+		@ApiOperation(value = "OpisMetody")
+
+-	Można stworzyć customowe opisy kodów zwracanych przez endpoint np:
+		@ApiResponses(
+			value = {
+				@ApiResponse(code = 404, message = "Content not found"),
+				@ApiResponse(code = 500, message = "Server failure")
+			}
+		)
+
+-	Na poziomie klasy annotacaja:
+		@Api
+	pozwala nam dogłębniej konfigurować opis tej klasy w swaggerze
+
+-	Na poziomie encji mamy annotację np.
+		@ApiModelProperty
+	dzięki której możemy określić np nazwe pola, jego opis, dopuszczalne/domyślne wartości	
