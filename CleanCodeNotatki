@@ -242,9 +242,86 @@
 
 
 -	TRZY PRAWA TDD:
-	1.	Nie piszemy kodu produkcyjnego bez wcześniejszego stworzenia niespełnianego testu jednostkowego.
+	1.	Nie piszemy kodu produkcyjnego bez wcześniejszego stworzenia 
+		niespełnianego testu jednostkowego.
 	2.	Nie można napisać więcej testów jednostkowych po niespełnieniu
 		testu, a brak kompilacji uznaje się za niespełnienie testu.
 	3.	Nie można pisać więcej kodu produkcyjnego niż jest wymagane
 		do spełnienia napisanego testu.
 	
+
+-	Czysty kod testów
+	Kod testów podlega takim samym zasadom czystości co kod produkcyjny
+	nie wolno odpuszczać sobie pisania wysokiej czystości kodu
+	tylko dlatego że piszemy testy
+
+-	Wydajność testów
+	Mimo że kod testów musi być takiej samej czystości co kod produkcyjny
+	możemy pozwolić sobie na zluzowanie jeżeli chodzi o wydajność,
+	bo testy uruchamiane są na środowisku testowym, nie produkcyjnym
+
+-	Jedna koncepcja na test
+	Dobrą praktyką jest próbowanie ograniczenia asercji w obrębie
+	jednego testu do jednej, ale jest to bardziej wskazówka
+	niż reguła. Regułą jest natomiast obsługiwanie tylko jednej 
+	koncepcji w jednym teście. Nie testujemy wielu przypadków
+	w obrębie jednej metody testowej.
+
+-	F.I.R.S.T.
+	*	Fast
+	*	Independent
+	*	Repeatable
+	*	Self-Validating
+		Test powinien mieć jeden parametr wyjściowy typu logicznego,
+		test może się udać, lub nie. Nie powinniśmy musieć przeglądać
+		logów żeby dowiedzieć się czy test się udał czy nie
+	*	Timely
+
+==	KLASY	==
+
+-	Kolejność elementów
+	Klasy zaczynamy od list zmiennych - najpierw publiczne statyczne,
+	potem prywatne statyczne a potem prywatne instancyjne.
+	Potem lądują metody publiczne a potem prywatne 
+
+-	Rozmiar
+	Klasy powinny być małe - jak najmniejsze - ale w przypadku klas,
+	w przeciwieństwie do funkcji, nie patrzymy na ilość wierszy,
+	ale na ilość *odpowiedzialności*. Najczęściej jeżeli nie możemy 
+	opisać czym zajmuje się klasa bez użycia słów "lub" "oraz" "ale" "jeżeli"
+	to znaczy że klasa ma zbyt dużo odpowiedzialności i powinna
+	zostać zrefaktorowana.
+	Podobnie jeżeli nie możemy wymyślić prostej, nieogólnej 
+	nazwy klasy - prawdopodobnie ma ona zbyt wiele odpowiedzialności.
+
+-	Single Responsibility Principle
+	Super ważna zasada i podwalina OOP. Klasa musi mieć tylko jeden
+	powód do zmiany - jedną odpowiedzialność. Nie powinniśmy się bać
+	tworzyć serii małych, jednoodpowiedzialnościowych klas, zamiast
+	kilku dużych.
+
+-	Spójność
+	Klasa powinna zawierac możliwie mało zmiennych instancyjnych.
+	W idealnej klasia każda metoda wykorzystywałaby każdą zmienną
+	instancyjną, ale nie jest zalecane dążenie do tego za cenę
+	innych reguł czystego kodu.
+	Jeżeli zauważymy że jakaś zmienna wykorzystywana jest
+	jedynie przez konkretny podzbiór metod, jest to jasny
+	znak że z naszej klasy chce się wydzielić nowa klasa.
+
+-	Podział na mniejsze przez spójność
+	Jeżeli chcemy zwiększyśc spójność i czystość kodu
+	i zaczynamy np wydzielać nowe metody z istniejących
+	możemy trafić na moment kiedy nowa metoda ma np.
+	4 argumenty.
+	W takim wypadku lepiej jest te zmienne zaimplementować
+	jako instancyjne, ale wtedy klasa zaczyna mieć
+	dużo zmiennych używanych jedynie przez grupy metod.
+	Jest to ewiedntnym znakiem, że konieczne jest
+	wydzielenie nowej klasy. Pozwala to na lepszą organizację 
+	kodu i zapewnienie bardziej przejrzystej struktury
+	programu.
+
+-	
+
+
