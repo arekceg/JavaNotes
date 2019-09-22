@@ -1,0 +1,88 @@
+==	SELENIUM	==
+
+		-		Selenium samo w sobie nie ma opcji generowania raportów,
+				TestNG to framework do testowania, który pozwala 
+				Selenium generować raporty odnośnie testów i bugów		
+
+=		SELENIUM WEBDRIVER	=
+
+		-		Interface łączący test case z przeglądarką
+		
+		-		Zależności:
+				*		selenium-java - zawiera w sobie wszystkie podstowowe
+						webdrivery i server selenium
+
+		-		Konieczne jest ściągnięcie chromedriver.exe jeżeli
+				będziemy używać chromedrivera	
+
+		-		driver.manage().timeouts().implicitlyWair(10,TimeUnit.SECONDS)
+				będzie kazał skryptowi czekać 15 sekund na
+				załadowanie się elementów zanim rzuci wyjątek
+
+		-		driver.navigate().to(url);
+				spróbuje wywołać dany adres url
+
+		-		pod driver.magnage() i driver.navigate() jest
+				zestaw metod służących do zarządzania (np. maksymalizaji)
+				stroną i nawigacją po niej
+
+		-		driver.getWindowHandle() driver.getWindowHandlers()
+				służy do pobrania z drivera identyfikatora obecnej zakładki
+				lub listy wszystkich zakładek, po których potem możemy się poruszać
+
+
+=		WYSZUKIWANIE ELEMENTÓW NA STRONIE		=
+
+		-		Selenium posiada mechanizm `By` który służy do wyszukiwania
+				elementów na stronie otwartej przez webdrivera
+
+		-		Identyfikowanie elementów może odbywać się przez xPath, CSS, ich zawartośc tekstową itd.
+
+		-		Metody dostępne pod By zwracają obiekty By. 
+				Obiekt taki możemy potem przekazac np. do metody
+				driver. 
+
+		-		Aby zabezpieczyć się przed łapaniem elementów zanim zostaną
+				załadowane można użyć WebDriverWait
+
+		-		WebDriverWait posiada np. metodę `until`, która przyjmuje
+				opodowiedni warunek ExpectedCondition i zwraca element,
+				kiedy warunek zostanie spełniony
+		
+		-		Metoda until przyjmuje właściwie Function i zwraca później
+				to co zostało zwrócone przez function.
+				until czeka aż wartośc zwrócona przez Function
+				będzie nie null i nie false
+		
+=		UŻYWANIE ELEMENTÓW NA STRONIE		=
+
+		-		Selenium posiada klasę Actions, która służy do wywoływania
+				działań na odnalezionych elementach
+
+		-		Każdy WebElement ma też w sobie metodę .click(), która jest
+				troche mądrzejsza niż Actions.click().
+		
+		-		Actions służy bardziej do symulacji ruchu myszką i ręcznego klikania
+
+=		CAPABILITIES		=
+		
+		-		Capabilities to interface w Selenium który służy do przechowywania
+				i modyfikacji konfiguracji webdrivera
+
+		-		DEPRACATED:			konfiguracja przez klasę DesiredCapabilities
+												np: Capabilities cap = DesiredCapabilities.chrome(); 
+
+				Preferowana obecnie metoda to tight coupling
+												Chrome Options opt = new ChromeOptions();	
+
+				ChromeOptions implementuje Capabilities więc mamy dostęp 
+				do wszystkich metod tego intefejsu
+
+		
+
+
+
+
+
+
+		
