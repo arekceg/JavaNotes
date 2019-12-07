@@ -322,6 +322,58 @@
 	kodu i zapewnienie bardziej przejrzystej struktury
 	programu.
 
--	
 
+==	SYSTEMY	==
+
+-	Oddzielenie konstrukcji systemu od jego użytkowania
+	"Systemy oprogramowania powinny oddzielić proces uruchamiania,
+	w którym sa budowane obiekty i łączone ze sobą zależności,
+	od logiki działania, która jest wykorzystywana po uruchomieniu"
+
+	Dobrą praktyką jest wydzielnie do `main` fragmentów kodu
+	odpowiedzialnych za budowę elementów aplikacji i przekazywanie
+	ich w głąb do fragmentów funkcjonalnych. Tym samym następuje
+	rozdzielenie logiki budowania aplikacji od jej uruchamiania.
+
+-	Fabryki
+	Kolejny spsób na ten rozdział to użycie wzorca fabryki abstrakcyjnej.
+	Aplikacja jest wtedy optymalnie rozdzielona od logiki tworzenia
+	obiektu.
+
+-	Dependency Injection i Inversion of Control
+	?? DOCZYTAĆ ??
+
+-	Aspect Oriented Programming
+	?? DOCZYTAĆ	??
+	Advice - okresla *co* ma być wykonane
+	PointCut - określa *kiedy* (when)
+		@EnableAspectJAutoProxy
+		@Component 
+		@Aspect //nad klasą
+		@Before("execution(public void foo())) //nad advice (metodą,
+											   //która ma być wykonana
+
+	?????????????????
+
+==	POWSTAWANIE PROJEKTU	==
+
+-	Cztery zasady tworzenia projektu:
+	1.	Przechodzi wszystkie testy
+	2.	Nie zawiera powtórzeń
+	3.	Wyraża intencje programisty
+	4.	Minimalizuje liczbę klas i metod
+
+
+-	Cały czas *najważniejsze* jest żeby kod był obstestowany
+	i przechodził te wszyskie testy. 
+
+-	Brak powtórzeń
+	Powtórzenia to nie tylko takie same linijki kodu,
+	ale przede wszystkim takie same implementacje.
+	W takim wypadku trzeba zacząć refaktorować 
+	i wyciągąć nowe metody z istniejącego kodu 
+	posługuąc się zasadą Spójności i SRP.
+	powtórzenia można zredukować również używając
+	interfejsów i dziedziczenia klas abstrakcyjnych
+	lub zwykłych
 

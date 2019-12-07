@@ -82,6 +82,11 @@
 								OR genre = 'action';
 						========
 							SELECT column
+							FROM table 
+							WHERE value IN ('value1','value2','value3');
+								//sprawdzi czy wartość zgadza się z którąś
+						========
+							SELECT column
 							FROM table
 							WHERE ....
 							ORDER BY name;
