@@ -1,10 +1,10 @@
-=========== JAVA ==============
+===========		JAVA 	==============
 
 1.	Co to jest String Pool
 	String Pool jest to miejsce w Heapie gdzie przechowywane są stworzone Stringi.
 	Jeżeli String tworzony jest przez `new` to nie jest wrzucany do Poola
 		String s1 = "Cat";
-		String s2 = "Cat";
+		String s2 = "Cat";	
 		String s3 = new String("Cat");
 		s1 == s2; //true bo wskazują na to samo miejsce w String Pool
 		s1 == s3; //false bo wskazuja na inne miejsca w pamięci
@@ -13,9 +13,9 @@
 2.	Róznica między String, StringBuffer a StringBuilder
 	- 	String:	immutable, używa StringBuffera do konkatynacji
 	-	StringBuffer: 	przez to że sam String jest immutable
-						to Buffer służy do konstrukcji, konkatynacuji stringów, substringowania itd
+						to Buffer służy do konstrukcji konkatynacuji stringów, substringowania itd
 	-	StringBuilder:	nie-threadsafe wersja StringBuffera - szybsza ale tylko
-						przy aplikacjach jednowątkowych (kompilator domyślnie używa go przy "+")
+						przy aplikacjach jednowątkowych (kompilator domyślnie używa go przy "+" od Javy 5)
 	StringBuilder i StringBuffer wewnętrznie przechowuja tablicę charów.
 
 3.	Co to jest i jak działa GC
@@ -78,7 +78,7 @@
 	`wait()` wstrzymuje działanie wątku aż go wybudzimy `notify()` lub `notifyAll()`
 	Ważną różnicą jest to że `wait()` zwalnia lock trzymany przez wątek, a `sleep()` nie.
 	`wait()` użyjemy w aplikacji wielowątkowej do komunikacji między wątkami, `sleep()` 
-	po prostu do wstrzymania działania aplikacji na jakić czas.
+	po prostu do wstrzymania działania aplikacji na jakiś czas.
 
 12.	Reflection w Javie
 	Reflection polega na zdolności programu do "introspekcji" czyli dostępu do metod i pól
@@ -97,7 +97,7 @@
 
 15.	Czym jest wyjątek?
 	Wyjątek jest to błąd, niespodziewana sytuacja w działaniu programu. Wszystkie wyjątki
-	dziedziczą na nadklasy `Throwable` i dzielą się na `checked` i `unchecked`.
+	dziedziczą z nadklasy `Throwable` i dzielą się na `checked` i `unchecked`.
 	- `checked`: 	są sprawdzane w czasie kompilacji i nie pozwalają nam skompilować programu
 					jeżeli nie będą obsłużone
 	- `unchecked`:	np. RuntimeException albo NullPointery - występują już w trakcie działania
@@ -122,15 +122,21 @@
 	konkretną strukturę danych tzn. WEB-INF itd. War będzie też zawierał widoki, jspeki, javascript itd.
 
 20.	Czy możemy mieć obiekt którzy jest immutable zawierający obiekt mutable?
-	Tak. Przykład poniżej:
+	NIE WIEM KURDE
+	Z jednej strony tak, bo jak klasa immutable ma obiekt ktory jest mutable
+	to jak nie damy do niego gettera i ustawimy go jako private final
+	to i tak nie ma do nieg o dostępu.
+	Z drugiej strony jeżeli zmienimy zawartość tego obiektu to zmieni się
+	nasza immutable klasa.
 	//Person jest mutable, bo mamy dostęp do jej pól i możemy je zmieniać
 		public final class Person(){
 			public int age;
 		}
 
-	// personRecord jest immutable bo mimo że zawiera mutable obiekt Person
-	// to nie mamy do niego dostępu 
-		public final class personRecord(){
+	//personRecord jest mutable ??? bo możemy zmienić jego zwartość
+	//zmieniając pole age na Person
+		public final class personRecord()
+		{
 			private final Person person;
 		}
 
@@ -151,9 +157,17 @@
 22.	Różnica między stosem a stertą
 	- 	Sterta "Heap"  to duży obszar pamięci w którym znajdują się stworzone obiekty i referncje
 		z nich wychodzące. Składa się z trzech częsci: Young Generation, Old Generation, Permanent Generation
-		Young - tu sa najnowsze obiekty, minor garbage collection czyści tę pamięć i przesuwa obiekty to OG
-		Old -  tu są obiekty które przeżyły kilka mniejszych GC. 
-		Permantn - tu sa trzymane metadane JVM, klasy i metody
+		(Meta Space) i Code Cache
+		*	Young - tu sa najnowsze obiekty, minor garbage collection czyści tę pamięć
+			i przesuwa obiekty to OG
+				Young dzieli się dodatkowo na:
+				*	Eden - tu trafiają obiekty od razu po stworzeniu
+				*	S1, S0 - dwa równopodzielone obszary pamięci gdzie trafiają obiekty które przeżyły
+					Minor Garbage Collection
+		*	Old -  tu są obiekty które przeżyły kilka mniejszych GC - domyślnie 15 
+		*	Permanent(Meta Sapce) - tu sa trzymane metadane JVM, definicje klas itd 
+		*	Code Cache - tu są przechowywane często wykorzystywane fragmenty kodu,
+			już skompilowane przez JIT 
 	-	Stos "Stack" to mniejszy obszar pamięci, w którym trzymane są typy proste które są używane
 		w danym scopie programu. Rozmiar stacka zmnienia się w zależności od tego ile zmiennych
 		musi pomieścić. LIFO - Last-In-First-Out - kiedy pojawia się nowa zmienna do wskakuje
@@ -173,12 +187,13 @@
 	-	HashMap - pozwala na jeden klucz `null` i nieskończenie dużo wartości `null`
 
 25.	Interfejs vs Klasa abstracyjna
-	Klasa abstracyjna może posiadać metody niedomyślne posiadające logikę biznesową.
-	Klasa abstrakcyjna może posiadac niestatyczne, niefinalne pola.
-	ttttterfejsu nie możemy stworzyć obiektu za pomocą new.
-	Klasy implementujące interfejs musza implementować wszysktie jego metody (oprócz domyślnych).
-	Klasy moga implementować wiele interfejsów, ale dziedziczyć tylko z jednej klasy abstracyjnej.
-
+	- Klasa abstracyjna może posiadać metody niedomyślne posiadające logikę biznesową.
+	- Klasa abstrakcyjna może posiadac niestatyczne, niefinalne pola.
+	- Interfejsu nie możemy stworzyć obiektu za pomocą new.
+	- Klasy implementujące interfejs musza implementować wszysktie jego metody (oprócz domyślnych).
+	  Tak samo dziedziczące klasy abstrakcyjne.
+	- Klasy moga implementować wiele interfejsów, ale dziedziczyć tylko z jednej klasy abstracyjnej.
+- 
 26.	JIT Compiler (just-in-time-compiler)
 	JIT Compiler jest częścią JVM odpowiedzialną za compilowanie Java bytecodu do czystego
 	machine code. Uruchamiany jest przy każdym wywołaniu metody w Javie, kompilując ją do 
@@ -201,7 +216,6 @@
 	Kiedy włączamy JVM używane są trzy classloadery:
 		- Bootstrap class loader
 		  ładuje podstawowe biblioteki java znajdujące się w <JAVA_HOME>/jre/lib
-
 		- Extensions class loader
 		  ładuje dodatkowe klasy umieszczone w jre/lib/ext albo w katalogach
 		  określonych w właściwości java.ext.dirs
@@ -331,18 +345,19 @@
 	-	Single responsibility principle
 		Klasa powinna mieć tylko jedną odpowiedzialność
 		"A class should have one, and only one, reason to change"
+
 	-	Open/closed principle 
-		Tworzenie klas tak żeby można było rozszerzać ich funkcjonalność bez nadmiernego 
-		modyfikowania istniejącej już logiki
-		Open for extension, closed for modyfication.
+		Tworzenie klas tak żeby można było rozszerzać ich funkcjonalność bez nadmiernego modyfikowania istniejącej już logiki
+		Open for extension, closed for modification.
+
 	-	Liskov substitution principle
-		Klasy powinny być tak zbudowane że powinno być możliwe podmienienie obiektów z klas bazowych
-		na obiekty z klas pochodnych bez wyoływania błędów w programie
+		Klasy powinny być tak zbudowane że powinno być możliwe podmienienie obiektów z klas bazowych na obiekty z klas pochodnych bez wyoływania błędów w programie
+
 	-	Interface segregation principle
 		Lepiej tworzyć więcej bardziej szczegółowych interfejsów niż jeden ogólny
+
 	-	Dependency inversion principle
-		"high level object should not depend on low level implementations, they should
-		both depened on abstracions"
+		"high level object should not depend on low level implementations, they should both depened on abstracions"
 
 51.	Jakiej listy użyję żeby dane dodawać np zawsze na początku
 	Linked list
@@ -372,7 +387,6 @@
 	- 	Interfejsy funkcyjne
 	-	Try-with-resources
 	-	Optionale
-	-	Typy generyczne
 
 66.	Trzy interfejsy funkcyjne i opisać je
 	- 	Function: przyjmuje jeden argument i zwraca jeden argument
@@ -454,7 +468,7 @@
 			Zapewnia że będzie istniała tylko jedna instancja danego obiektu na ciąg działania 
 			programu. Obenie uważany za antywzorzec.
 			1.	Prywatny konstruktor, żeby uniemożliwić tworzenie większej ilości obiektów
-			2.	`public static final` pole o klasie takiej samej jak singleton
+			2.	`public static final` pole o typie takim samym jak singleton
 			3.	`public static` metoda która zwraca instancję klasy
 
 		-	Fabryka
@@ -493,20 +507,6 @@
 			Obiekt posiada "subskrybentów" (obserwatorów) swojego stanu i może ich informować
 			o zmianach w nim.  Subskrybenci nie wysyłają zapytań do obiektu, tak więc
 			pozwalają mu spokojnie pracować i czekają na wybudzenie przez ten obiekt.
-
-		-	Strategy
-			*	Używanie kompozycji a nie dziedziczenia
-			*	Wprowadza się abstrakcyjne "strategie", które potem są implementowane w konkretne
-				wersje algorytmów.
-				np. mamy kaczki z których każda musi kwakać. Zamiast tworzyć metodę quack() w superklasie
-				Duck z której dziedziczą wszystkie inne kaczki, tworzymy np. Interfejs albo Subklasę
-				IQuackStrategy w której jest abstrakcyjna metoda quack() i potem implementacje np:
-				SimpleQuackStrategy i LoudQuackStrategy z których każda będzie miała własną implementację
-				quack();
-				Główna klasa Duck powinna wtedy posiadać pole IQuackStrategy w które w konstruktorze
-				wstrzykniemy odpowiednią implementację tego interfejsu.
-			*	Dzięki temu możemy np. w trakcie trwania programu podmienić implementację
-		danej abstracji w naszym obiekcie.
 
 	*	Inne
 		-	MVC

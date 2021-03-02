@@ -26,7 +26,7 @@
 	-	Typy generyczne
 
 6.	Trzy interfejsy funkcyjne i opisać je
-	- 	Function: przyjmuje jeden argument i zwraca jeden argument
+	- Function: przyjmuje jeden argument i zwraca jeden argument
 	-	Customer: przyjmuje jeden argument i nie zwraca nic
 	-	Predicate: przyjmuje jeden argument i wywołuje na nim test logiczny
 
@@ -73,14 +73,56 @@
 			będą immutable.
 
 12.	Jak definiujemy beany w Springu? Jaki jest ich domyślny scope?
+		a) w pliku XML
+		b) od Spring 2.5 - annotacje 
+						Annotacje są rozpatrywane przed XMLem, więc XML je nadpisze
+		c) Java-Based: zrobienie klasy @Configuration i w niej definiowanie metod
+						@Bean które zwracają beany danej klasy
+		Domyślny Scope beanów to Singleton. Ale nie jest to taki singleton jak zwykły singleton.
+		Scope Singleton oznacza tyle że zawsze kiedy wywołamy beana o id X
+		to dostaniemy ten sam obiekt, a nie nowy. 
+		Jeżeli chcielibyśmy dostawać nowy obiekt to od tego jest Scope Prototype.
+
 13.	Dlaczego powstał SpringBoot?
+				Spring Boot automatyzuje i ułatwia konfigurowanie potrzebnych elementów 
+				np. do stworzenia Web Serwisu (konfiguracja kontekstu servletów) czy Spring Data
+				(konfiguracja entity managera, transaction managera itd)
+		
 14.	Różnica między Post a Put, czy Putem możemy umiesczać nowe dane na serwerze?
+				Super artykuły o tym:
+				https://codecouple.pl/2017/06/09/15-spring-boot-post-put-czy-patch/	
+				https://stackoverflow.com/questions/630453/put-vs-post-in-rest
+
+				- POST: używany do tworzenia nowego zasobu kiedy jego np ID nie jest jeszcze znane
+												id będzie przydzielone przez serwer w czasie tworzenia obiektu.
+												** Po utworzeniu obiektu należy zwrócić kod 201 “Created”. **
+				- PUT: może być używany i do tworzenia i aktualizowania danych na serwerze,
+												kiedy ID obiektu jest już znane i można je przekazać w parametrach requestu
+												** Po aktualizacji należy zwróć kod 204 “No content”. **
+				- PATCH: używany do updejtowania tylko części obiektu którego ID jest znane
+												** Po aktualizacji należy zwróć kod 204 “No content”. **
+
 15.	Annotacje @Controller, @Repository, @Service - co oznaczają pod maską?
+				@Controller:		oprócz zwykłego @Component sprawia też że DispatchServlet będzie uwzględniał
+																		tę klasę kiedy będzie szukał klas z @RequestMapping	
+				@Repository:		zapewnia obłusługę platform-dependent błędów i tłumaczenie ich na 
+																		ogólne błędy springowe
+				@Service:					nie nie robi na razie
 16.	Obsługa wyjątków w Springu
+				
 17.	Optimistic vs Pesimistic locking w Hibernate
+				-	Pessimistic:	aplikacja zamyka dostęp do bazy danych oprócz danej transakcji
+										bezpieczniejsze niż optimistic, ale aplikacja musi być odpowiednio
+										zaprojketowana żeby z niego korzystać
+				-	Optimistic:		wiele transakcji ma dostęp do bazy danych. przed updatem
+										transakcja sprawdza czy versionNo i timeStamp są takie same
+										jak te odczytane przy połączeniu. jeżeli nie to wie że dane 
+										sa skażone i anulują tę transakcję
 18.	Kiedy Hibernate rzuca LazyInitializationException
 19.	Kiedy używać indeksowania baz danych
+				PytaniaJava
 20.	Wady indeksowania
+				PytaniaJava
 21.	Jakie kody komunkatów HTTP znasz
 22. Czym różnią się kody 400 od kodów 500?
 23. Co oznacza S w skrócie SOLID

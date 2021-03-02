@@ -1,7 +1,6 @@
 == DUŻE O ==
-
--	O(f(n)) gdzie f(n) oznacza funkcję, która opisuje jak czas wykonania algorytmu 
-	skaluje się w stosunku do pewnych zmiennych. Z definicji:
+-	O(f(n)) gdzie f(n) oznacza funkcję, która opisuje jak czas wykonania algorytmu
+	 skaluje się w stosunku do pewnych zmiennych. Z definicji:
 		Notacji duże-O używamy do ograniczenia asymptotycznego tempa wzrostu
 		czasu wykonywania algorytmu od góry za pomocą stałych współczynników.
 		Oznacza to że czas nie może przekroczyć f(n), ale może być mniejszy.
@@ -93,4 +92,4 @@
 	*	Usprawnienia:
 		-	Wywoływanie rekurencyjne zawsze najpierw dla mniejszego podbioru
 		-	Dla małych (~10 elementów) podzbiorów wywoływanie Insert Sortu 
-			pozwoli nawet doprowadzić do złożoności czasowej O(n) dla tego podzbioru
+			pozwoli nawet doprowadzić do złożoności czasowej O(n) dla tego podzbiorpu
