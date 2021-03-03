@@ -1,0 +1,35 @@
+=== ASPECT ORIENTED PROGRAMING ===
+https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/aop.html
+
+1.		Nazewnictwo
+		-	Aspect: zmodularyzowana część kodu, koncept, która przecina kilka klas. np. obsługa tranzakcji, logowanie
+		-	Cross Cutting Concerns: logika która jest wspólna dla wielu modułów czy klas. np logowanie itp
+		- Joint Point: konkretny moment w wykonaniu kodu, np. wywołanie metody, rzucenie wyjątku. W Spring AOP to zawsze wywołanie metody.
+		-	Advice: akcja którą podejmuje Aspect w danym JointPoint. Są różne typy Advice np. Before, After, Around
+		-	Introduction: zmiana obiektu w trakcie wykonania advice. np. dodanie mu interfejsu isModified albo coś takiego
+
+2.		Typy Advice
+				-	Before: Wykonuje się *przed* joint pointem. Nie ma możliwości zatrzymania wykonania programu przed joint pointem
+				-	After Returning: Wykonuje się kiedy joint point wykona się poprawnie np. kiedy metoda zwróci jakąś wartość bez rzucania wyjątku
+				- After Throwing: Wykonuje się kiedy metoda rzuci wyjątek
+				- After (After Finally): Wykona się na końcu metody niezależnie od sposobu jej zakończenia
+				- Around: Najbardziej ogólny Advice. Może się wykonywać przed i po wykonaniu metody.
+								Przy jego użyciu można decydować czy kontynuować wykonanie metody do joint pointa,
+								czy skrócić jej wykonanie zwracając jej typ zwracany lub rzucając wyjątek.
+
+== SYNTAX ==
+
+1.		Tworzymy klasę w której będą jakieś Advice, lub jeden typ Advice, np LoggingAdvice.
+				Jako że to Spring to musi mieć annotację 
+						@Component
+				Jako że będzie naszym Aspectem to musi mieć annotacje 
+						@Aspect
+
+2.		Tworzymy pointcuty które będziemy chcieli łapać. Tworzy sie je jako public void metody z annotacją
+						@Pointcut
+				Annotacja ta przyjmuje dodatkowo opis pointcutu w zapisany w konkretny sposób.
+				Ten zapis dzielimy na pointcur expression i pointcut signature
+						@Pointcut("execution(* transfer(..))")// the pointcut expression
+						private void anyOldTransfer() {}// the pointcut signature
+						
+
