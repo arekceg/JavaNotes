@@ -108,8 +108,36 @@
 				@Repository:		zapewnia obłusługę platform-dependent błędów i tłumaczenie ich na 
 																		ogólne błędy springowe
 				@Service:					nie nie robi na razie
+
 16.	Obsługa wyjątków w Springu
-				
+				W Springu można przechwytywać dowolne wyjątki i obrabiać/opakowywać je przed rzuceniem.
+				-	Trzeba zrobić klasę z annotacją 
+										@ControllerAdvice lub @RestControllerAdvice (ControllerAdvice + ResponseBody)
+								która będzie przechowywała nasze ExceptionHandlery (może być kilka tych klas ofc)
+				-	W tej klasie robimy metody na obsługi róznych wyjątków
+								np jeżeli chcemy obsłużyć wyjątek FooException
+
+										@ExceptionHandler(FooException.class)
+										public ReponseEntity<> handleException(FooException exception){
+												// tutaj można dołożyć 
+												return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST)
+										}
+										//lub zdefiniować HttpStatus już w annotacji
+										@ExceptionHandler(FooException.class)
+										@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+										public ErrorMessage handleException(FooException exception){
+												Bar objectToReturn = new Bar(...);
+												return objectToReturn; // ten obiekt zostanie zserializowany
+																								           // i wysłany JSONEM
+										}
+
+				- Jak stworzymy swoje własne wyjątki które mają np knokretne informacje które
+								chcemy zwrócić to można je własnie w ten sposób obsłużyć
+				- Taki handler nam wtedy zapewnia złapanie wyjątku, obrobienie go i zwrócenie
+						wraz z HttpStatus w odpowiednim ResponseEntity
+
+16a. Co to jest @ControlerAdvice
+						
 17.	Optimistic vs Pesimistic locking w Hibernate
 				-	Pessimistic:	aplikacja zamyka dostęp do bazy danych oprócz danej transakcji
 										bezpieczniejsze niż optimistic, ale aplikacja musi być odpowiednio
@@ -118,22 +146,142 @@
 										transakcja sprawdza czy versionNo i timeStamp są takie same
 										jak te odczytane przy połączeniu. jeżeli nie to wie że dane 
 										sa skażone i anulują tę transakcję
+
 18.	Kiedy Hibernate rzuca LazyInitializationException
+				- Kiedy próbuje się pobrać leniwie inicjalizyowaną część encji bez aktywnego 
+						kontekstu sesji
+				- FetchType.EAGER - ZŁE ROZWIĄZANIE, powoduje n+1
+				-- JOIN FETCH - dobre rozwiązanie
+						pod maską Hibernate zrobi JOIN który zbierze wszystkie
+						potrzebne dane w jednym zapytaniu np
+								"SELECT a FROM Author a  JOIN FETCH a.books"
+				-	Można zrobić LEFT JOIN żeby zwróciło tez Autorów bez książek
+				-- DTO Projection - dobre rozwiązanie
+				-	Zamiast pobierać całą encję np books może potrzebujemy tylko tytułu książek?
+				- Zrobić DTO któro będzie zawierało potrzebne dane i tylko je generować np
+						"select new " +
+        "   PostCommentDTO(" +
+        "       pc.id, pc.review, p.title" +
+        "   ) " +
+        "from PostComment pc " +
+        "join pc.post p " +
+        "where pc.review = :review", PostCommentDTO.class)
+						i teraz zamiast całej encji post bierzemy tylko jej tytuł
+				
+
 19.	Kiedy używać indeksowania baz danych
-				PytaniaJava
-20.	Wady indeksowania
-				PytaniaJava
+				- Implementowane żeby szybciej przesukiwać bazy danych. Zamiast przeszukiwać cała tabelę
+					 od początku indeksowanie pozwala pogrupować dane tak, że wyszukiwanie przebiega znacznie szybciej.
+				- Minusem jest to że wtedy dodawanie danych trwa dłużej bo każda nowa instancja encji musi zostąć
+					 zindeksowana w trakcie dodawania do bazy danych.
+				- 	Tworzenie:
+					 	CREATE INDEX index_name
+					 	ON table_name (column1, columnt2, ...);
+
 21.	Jakie kody komunkatów HTTP znasz
+				https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+				--1xx
+							kody informacyjne
+								-	100 Continue: kontynuuj zapytanie lub zignoruj kod jeżeli zapytanie się wykonało
+								- 102 Processing: server przyjął zapytanie ale jeszcze je przetwarza
+				--2xx
+							kody ok
+								-	200 OK: wszystko git. W zależności od rodzaju zapytania:
+										GET: żądany obiekt znajduje się w ciele odpowiedzi
+										HEAD: headery znajdują się w ciele odpowiedzi
+										POST/PUT: W ciele odpowiedzi znajduje sie zasób opisujący rezulat (np. ID obiekt)
+								- 201 Created: udało się stworzyć obiekt, POST/PUT
+								- 204 No Contenct: nie ma co zwrócić ale udało się stworzyć/zmodyfikować obiekt
+										przydatne przy PUT
+				--3xx
+							kody dotyczące przekierowań
+								-	300 multiple choice: jest więcej niż jeden respons do danego requesta
+										można przekazać w odpowiedzi linki do możliwych rezultatów
+								-	301 moved permanently: resource został przeniesiony na stałe, w responsie
+										zwrócić poprawny adres
+								-	302 found: resource przeniesiony TYMCZASOWO
+				--4xx
+						 błędy klienta
+								-	400 bad request: server nie zrozumiał requestu ze względu na błędy w syntaxie
+								-	401 unauthorized: unauthenticated bardziej - user musi się autentyczyć
+										żeby przetworzyć request. Server nie rozumie kim jest user
+								- 403 forbidden: user nie ma dostępu do danego kontentu, ale server
+										wie kim jest user
+								-	404 not found:		KLASYK url jest nierozpoznany przez serwero
+								- 405 method not allowed - czasami server nie dopuszcza np usuwania 
+										ale GET i HEAD muszą być allowed zawsze
+								-	408 server timeout - jasne
+				--5xx
+						błędy servera
+								- 500 internal server error: serwer napotkał problem i nie wie zabardzo ocb
+								-	501 Not Implemented: danej metody nie zaimplementowano, zawsze 
+										musi być zaimplementowane GET i HEAD
+								- 502 Bad Gateway: serwer pośredni, działający jako serwer proxy, 
+										nie był w stanie uzyskać prawidłowej odpowiedzi z serwera nadrzędnego 
+										lub w ogóle nie uzyskał odpowiedzi na swoje żądanie.
+								-	503 Service Unavailable: serwer nie jest gotowy na request, na przykład
+										ma maintenance lub jest przeciążony
+								-	504	Gateway Timeout: serwer pośredni nie odpowiedział w czas
+
 22. Czym różnią się kody 400 od kodów 500?
+		400 - najczęściej wynikają z błędów clienta
+		500 - najczęsciej wynikają z błędów serwera
+
 23. Co oznacza S w skrócie SOLID
+		Single Responsibility Principle
+		Klasa powinna miec tylko jedną odpowiedzialność
+				"A class should only have one reason to change"
+  https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html
+
 24.	Jak zbadać czy klasa narusza S
+  https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html
+		"However, as you think about this principle, remember that the reasons for change are people. 
+		It is people who request changes. And you don’t want to confuse those people, or yourself,
+		by mixing together the code that many different people care about for different reasons."
+		
 25.	Czym się różni Spy od Mock
+		Spy zachowuje logikę udawanej klasy, Mock nie. Używając Spy stubujemy
+		tylko niektóre metody z klasy. Spyów sie podobno już nie używa za bardzo.
+
 26.	Jeżeli metoda nic nie zwraca to jak ją obsłużyć w testach?
+		1.Możemy użyć Mockito verify żeby sprawdzić czy i ile razy została wywołana
+						verify(createdMock).foo(); // czy w ogóle sie wywoła?
+						verify(createdMock, atLeast(2)).foo(); // czy się wywoła conajmniej 2 razy
+				Składnia BDD
+						then(createdMock).should().foo();
+		2.Możemy użyć Argument Captors żeby sprawdzić dokładnie jakie argumenty
+				zostały przekazane metodzie
+						-	Składnia:
+								ArgumentCaptor<Foo> argumentCaptor = ArgumentCaptor.forClass(Foo.class);
+
+						-	Przechwytywanie parametrów odbywa się w czasie verify
+
+						-	W kodzie verify (albo then) używany wtedy zamiast argumentu
+							stworzony przez nas argumentCaptor.
+								verify(Bar).barFoo(argumentCaptor.capture());
+								// lub 
+								then(Bar).should().barFoo(argumentCaptor.capture());
+
+						-	Dzięki temu mamy w zmiennej argumentCaptor przechwycone to co przekazaliśmy w argumencie metody.
+							Mozemy się tym teraz posługiwać używając argumentCaptor.getValue() żeby wyciągnąć obiekt z captora, np:
+									//argumetnCaptor.getValue() zwraca obiekt włącznie z logiką w nim
+									assertThat(argumentCaptor.getValue().bar(), is(euqalTo(5)));
+
+						-	Jeżeli metoda przyjmuje więcej niż jeden argument to dla każdego musimy utworzyć oddzielny captor
+
 27.	Jak sprawdzić czy metoda która nic nie zwraca została wywołana w teście?
+				Możemy użyć Mockito verify żeby sprawdzić czy i ile razy została wywołana
+						verify(createdMock).foo(); // czy w ogóle sie wywoła?
+						verify(createdMock, atLeast(2)).foo(); // czy się wywoła conajmniej 2 razy
+				Składnia BDD
+						then(createdMock).should().foo();
+
 28.	Dlaczego JIT Compiler JVM nazywa się HotSpot
 	Bo cały czas analizuje kod programu szukając `hot spotów` czyli fragmentów kodu
 	wykonywanych często lub powtarzających się i te elementy `just-in-time` kompiluje
-	do kodu maszynowego
+	do kodu maszynowego.
+
 29.	Aspect Oriented Programming w Springu
+		>> AOPNotatki
 30.	Czy w Javie występuje polimortizm pól
 	Nie, pola są chowane, metody overridowane
