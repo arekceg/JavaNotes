@@ -19,6 +19,7 @@
 	StringBuilder i StringBuffer wewnętrznie przechowuja tablicę charów.
 
 3.	Co to jest i jak działa GC
+ https://programistanaswoim.pl/wp-content/uploads/2017/07/jvm2.pdf
 	Garbage Collector jest to Daemon thread działający cały czas w tle JVM,
 	który na celu ma dekstrukcję niepotrzebnych obiektów i zwalnianie miejsca w Heapie. 
 	GC usuwa elementy które są "unreachable". Możemy sprawić że obiekt jest unreachable poprzez:
@@ -32,6 +33,7 @@
 	że GC zadziała w tym momenciel.
 
 4.	Czym jest JVM
+		https://programistanaswoim.pl/wp-content/uploads/2017/07/jvm1.pdf
 	Jest to wirtualna maszyna która pozwala komputerowi na odpalenie programów,
 	które zostały skompilowane do Java bytecodu. Dzięki konkretnym specyfikacjom, które
 	musi spełniać każda JVM autorzy programów mogą mieć pewność że ich program będzie działał
@@ -122,7 +124,7 @@
 	konkretną strukturę danych tzn. WEB-INF itd. War będzie też zawierał widoki, jspeki, javascript itd.
 
 20.	Czy możemy mieć obiekt którzy jest immutable zawierający obiekt mutable?
-	NIE WIEM KURDE
+	TAK KURDE, no tak.
 	Z jednej strony tak, bo jak klasa immutable ma obiekt ktory jest mutable
 	to jak nie damy do niego gettera i ustawimy go jako private final
 	to i tak nie ma do nieg o dostępu.
@@ -135,6 +137,7 @@
 
 	//personRecord jest mutable ??? bo możemy zmienić jego zwartość
 	//zmieniając pole age na Person
+	//ale jak się dostać do tego person???
 		public final class personRecord()
 		{
 			private final Person person;
@@ -189,22 +192,37 @@
 25.	Interfejs vs Klasa abstracyjna
 	- Klasa abstracyjna może posiadać metody niedomyślne posiadające logikę biznesową.
 	- Klasa abstrakcyjna może posiadac niestatyczne, niefinalne pola.
-	- Interfejsu nie możemy stworzyć obiektu za pomocą new.
+	- Z interfejsu nie możemy stworzyć obiektu za pomocą new.
 	- Klasy implementujące interfejs musza implementować wszysktie jego metody (oprócz domyślnych).
 	  Tak samo dziedziczące klasy abstrakcyjne.
 	- Klasy moga implementować wiele interfejsów, ale dziedziczyć tylko z jednej klasy abstracyjnej.
 - 
 26.	JIT Compiler (just-in-time-compiler)
-	JIT Compiler jest częścią JVM odpowiedzialną za compilowanie Java bytecodu do czystego
-	machine code. Uruchamiany jest przy każdym wywołaniu metody w Javie, kompilując ją do 
-	kodu maszynowego i uruchamiając "Just-In-Time". Wtedy JVM wywołuje ten kod już bez potrzeby
-	interpretacji bytecode - > machine code, co przyspiesza działanie programu.
+		Super artykuł: https://softwareskill.pl/podsumowanie-jvm-jit
+	JIT Compiler jest częścią JVM odpowiedzialną za optymalizację wykonania kodu programu.
+	Jeżeli JIT zauważy że jakaś metoda jest odplana duzo razy to może sie nią zająć
+	i próbować zoptymalizować jej wykonanie np przez:
+		* Zagnieżdzanie metod (method inlining).
+		* Eliminacja martwego kodu (dead code elimination).
+		* Kompilacja do kodu natywnego.
+		* Grupowanie blokad (lock coarsening).
+		* Rozwijanie pętli (loop unrolling).
+		* Eliminacja blokad (lock elision).
+		* Ostrzenie typów (type sharpening).
+
+		Dwa wazne punkty - zagnieżdzanie metod i kompilacja do machinecodu
+		1.		compilowanie Java bytecodu do czystego machine code. 
+						JIT kompiluje daną metodę do kodu maszynowego i sprawdza czy to doprowadziło
+						do przyrostu prędkości jej wykonania - jeżeli nie to cofa zmianę
+						i zostawia metodę jako bytecode
+		2.		Method Inlining - przepisywanie ciała metody do miejsca jej wywołania
+						nazywane "matką wszelkiem optymalizacji"
 
 27.	Local vs Instance variable
 	-	Zmienna lokalna istnieje jedynie w obrębie metody, konstruktora lub bloku kodu i jest usuwana
 		ze Stacka w momencie opuszczenia przez program danego bloku. Nie jest również dostępna
 		dla metod spoza tego bloku kodu.
-	-	Instancje variable jest silnie powiązana z klasą w której jest zdefiniowana i jest
+	-	Instance variable jest silnie powiązana z klasą w której jest zdefiniowana i jest
 		jej właściwością. Definiowane są w obrębie klasy ale poza jej metodami.
 
 28.	Constructor chaining
@@ -278,6 +296,7 @@
 36. Thread.join()
 	Metoda służy do synchronizacji wątków. Sprawia że obecny thread będzie czekał na 
 	wykonanie się threadu na którym metoda została wywołana.
+	np. w threadzie t1 wywołamy t2.join() to t1 skończy sie po tym jak t2 sie skończy
 
 37.	Thread.yield()
 	Po wywołaniu daje znać thread scheadulerowi że dany wątek jest gotowy oddać zasoby
@@ -363,11 +382,10 @@
 	Linked list
 
 61.	Czy można przekazywać Optional w argumentach metody?
-	Nie powinno się. Używanie tak Optionali zaciemnia z
-	apis metody,
+	Nie powinno się. Używanie tak Optionali zaciemnia z apis metody,
 	sprawia że działanie metody zależy od wartości optionala,
 	optional w porównaniu do nullowalnych argumentów jest bardziej kosztowny,
-	Optional może reprezentować aż trzy różne stany: null, non-null ale isPresent = false,
+	Optional może reprezentować aż trzy różne stany: null, non-null ale isPresent = false,??
 	oraz non-null opakowujący właściwą wartość.
 
 62.	Skoro nie to jak można obsłużyć zmienną która może być nullem?
@@ -382,17 +400,18 @@
 	o swojej zawartości, jak i odnośniki do node przed i za nim.
 
 65.	Co wprowadziła Java 8?
-	- 	Streamy
-	- 	Wyrażenia lambda
-	- 	Interfejsy funkcyjne
-	-	Try-with-resources
-	-	Optionale
+	1 	Streamy
+	2 	Wyrażenia lambda
+	3 	Interfejsy funkcyjne
+	4		Metody domślne w interfejsach
+	5	 Try-with-resources
+	6	 Optionale
 
 66.	Trzy interfejsy funkcyjne i opisać je
-	- 	Function: przyjmuje jeden argument i zwraca jeden argument
-	-	Customer: przyjmuje jeden argument i nie zwraca nic
+	- Function: przyjmuje jeden argument i zwraca jeden argument
+	-	Consumer: przyjmuje jeden argument i nie zwraca nic
 	-	Predicate: przyjmuje jeden argument i wywołuje na nim test logiczny
-	-	Supplier: nie przyjmuej argumentów, i zwraca jeden
+	-	Supplier: nie przyjmuje argumentów, i zwraca jeden
 	-	Operator: przyjmuje i zwraca ten sam typ danych
 
 67.	Map vs flatMap w Streamach
@@ -402,6 +421,8 @@
 		tzn: jeżeli mamy np. nested stream, kolekcję lub optional 
 		Optional.of(Optional.of(foo)) lub List<List<String>> 
 		to używając flatMap możemy to spłaszczyć do Optional.of(foo) i List<String>
+		Przykład: Stream<String[]> będzie ciężki do obsłużenia, a po zrobieniu
+		stream.flatMap(s -> s) dostajemy Stream<String>
 
 68.	Jak sprawić żeby obiekt był Immutable?
 	-	Ustawić pola jako `private final`
