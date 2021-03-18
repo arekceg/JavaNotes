@@ -3,7 +3,7 @@
 	Nie powinno się. Używanie tak Optionali zaciemnia zapis metody,
 	sprawia że działanie metody zależy od wartości optionala,
 	optional w porównaniu do nullowalnych argumentów jest bardziej kosztowny,
-	Optional może reprezentować aż trzy różne stany: null, non-null ale isPresent = false,
+	Optional może reprezentować aż trzy różne stany: null, non-null ale isPresent = false,??
 	oraz non-null opakowujący właściwą wartość.
 
 2.	Skoro nie to jak można obsłużyć zmienną która może być nullem?
@@ -191,8 +191,8 @@
 										HEAD: headery znajdują się w ciele odpowiedzi
 										POST/PUT: W ciele odpowiedzi znajduje sie zasób opisujący rezulat (np. ID obiekt)
 								- 201 Created: udało się stworzyć obiekt, POST/PUT
-								- 204 No Contenct: nie ma co zwrócić ale udało się stworzyć/zmodyfikować obiekt
-										przydatne przy PUT
+								- 204 No Content: nie ma co zwrócić ale udało się stworzyć/zmodyfikować obiekt
+										Content przy PUT
 				--3xx
 							kody dotyczące przekierowań
 								-	300 multiple choice: jest więcej niż jeden respons do danego requesta
@@ -285,3 +285,34 @@
 		>> AOPNotatki
 30.	Czy w Javie występuje polimortizm pól
 	Nie, pola są chowane, metody overridowane
+	
+
+======================
+
+wewnertzna klasa anonimiowa ile interfejsów ile dziedziczenia 
+final finally
+jakie obiekty zbiera GC
+co się stanie jak dodamy takei same obiekty do HashSetu
+podać kolekcję która ma indeksowany dostęp i zmienny rozmiar
+jak zrobić klasę immutable
+
+1.		SOAP vs REST
+2.		sync vs async
+3.		Czy REST może przyjmować xml
+4.		Czy REST może byc asnync
+5.		Domyślny scope beanów springowych
+6.		maven lifecycle
+7.		mvn verify vs mvn install
+8.		Zalety i wady streamów
+9.		event-driven architecture
+10.	Optymalizacja SQL - joinowanie z mniejszej tabeli do większej
+11.	Wyniki z dwóch tabel bez JOIN
+12.	Czy mogę umieścić @GeneratedValue nad każdym polem?
+13.	Garbage Collector, algorytm G1
+14.	Dirty Checking
+15.	Używanie zewnętrznych JARów - mvn albo ręcznie
+16.	Profile mavenowe do czego się używa
+17. Liskov substitution principle
+18. Single responsibility principle
+19. Wrzucanie stringa do String poola
+20. Rodzaje transakcji w bazie danych
