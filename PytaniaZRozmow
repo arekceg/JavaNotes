@@ -316,3 +316,15 @@ jak zrobić klasę immutable
 18. Single responsibility principle
 19. Wrzucanie stringa do String poola
 20. Rodzaje transakcji w bazie danych
+21. Jak sprawdzić czy String jest palindromem
+22. == vs equals
+24. Jak działaja każda kolekcja ogólnie
+25.	== vs equals przy enumach
+26.	deep copy vs shallow copy
+27. Streamy.reduce jak działa
+28. annotacja @Async
+29. Annotacja @Transactional i problemy jakie mogą z niej wyniknąć
+30.	WHERE vs HAVING w sql
+31.	UNION w sql
+32.	Eager vs Lazy loading, jak załadować Lazy?
+33. Wzorce projektowe w Springu
