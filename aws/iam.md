@@ -1,5 +1,6 @@
 ## IAM
 
+
 - Identity and Access Management
 - Służy do tworzenia dodatkowych indentities w ramach jednego konta
 - Pozwala na ograniczanie dostępów różnym identities
@@ -29,6 +30,23 @@
 - IAM pozwala na korzystanie z `Identity Federation` i `MFA`
 - Dobrą praktyką jest używanie root usera tylko do stworzenia konta a potem używanie konta w stylu `IAM Admin` które ma też szerokie uprawnienia, ale w przeciwieństwie do konta root można je ograniczyć w razie potrzeby
 
+### AWS ACCOUNTS
+
+-	Konto AWS to **kontener** na `identities` i `resources`
+	-	`identity` to może być user, group lub role
+		jedno konto może mieć wiele identities, np dla każdego z developerów pracujących w obrębie danego konta
+	- `resources` to zasoby dostępne dla danego identity
+
+- Każde konto ma `root` identity
+	-	`root` ma pełny dostęp do całego kota i nie można tego ograniczyć!
+
+- Warto mieć wiele kont AWS w zależności od klienta, środowiska, zespołu itd
+	-	 dzięki temu jak ktoś borknie jedno konto to są inne konta które cały czas działają 
+
+### MFA
+
+-	`Security Credentials` -> `MFA` -> `Activate MFA`
+
 ### USER
 - Mapuje sie na jednego użytkownika danego konta, np. jednego devleopera lub jedną aplikację 
 
@@ -54,3 +72,23 @@
 - Przy tworzeniu usera możemy mu od razu nadać hasło i albo go zmusić do zmienienia przy pierwszym logowaniu (policy `IAMUserChangePassword`) albo przypisać mu od razu stałe hasło
 - Jako permissions dajemy `AdministratorAccess`
 - Potem możemy się zalogować używając stworzonego loginu przez wyżej stworzony alias albo przez globalną stronę AWS
+
+### ACCESS KEYS
+- Long Term Credentials 
+	-	nie zmienjają się automatycznie
+- hasło + login -> logowanie przez stronę
+-	access keys -> api, cli
+- Można stworzyć usera który ma mieć dostęp tylko przez konsolę i wteyd ma tylko Acces Key, bez hasła
+		- Password is optional for IAM user
+- IAM User może mieć **dwa** Access Keys, nie więcej
+	- Dzięki temu możemy robić podmianę Access Keys, czyli stworzyć nowy zestaw, podmienić jego wartość np. aplikacji i potem zdeaktywować stary
+- Access Keys mogą być tworzone, usuwane, aktywowane i dezaktywowane
+
+- Access Keys to para kluczy:
+	1. Access Key ID 
+	2. Secret Access Key (wyświetlane tylko raz, przy tworzeniu pary!!!)
+
+#### Tworzenie Access Keys
+- `Security Credentials` -> `Create Access Key`
+
+
