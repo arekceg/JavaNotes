@@ -60,7 +60,7 @@ be appropriated in any quantity at any time.
  storage, processing, bandwidth, and active user accounts). Resource usage can be
  monitored, controlled, and reported, providing transparency for both the provider and
  consumer of the utilized service
-```
+``` 
 
 - Resource usage can be monitored, controller, reported __and billed__
 	- Przed chmurą płaciło się za infrę z góry, a jak nie wykorzystałeś całości to płaciłeś za puste serwery
@@ -97,3 +97,16 @@ be appropriated in any quantity at any time.
 -	`Unit of Consumption` - częsc systemu od którego my zarządzamy infrastrukturą
 	-	np. jak kupujemy VMkę to zarządzamy nią od poziomu systemu opreacyjnego do aplikacji, a hardwarem na którym jest odpalana zarządza vendor
 
+#### Infrastructure As A Service (IAAS)
+
+- UoC - System Operacyjny, VMka
+- Vendor udostępnia nam maszyny wirtualne z przypisanymi zasobami, wszystkim innym (hardware, wirtualizacja itd) zajmuje sie on
+
+#### Platform As A Service (PAAS)
+
+- UoC - Runtime environment aplikacji
+- Kiedy chcemy po prostu odpalić na czymś swoją apkę, nie zarządzając bezpośrednio VMką ani hardwarem na którym jest odpalona
+
+#### Software As A Service (SAAS)
+- UoC - Sama aplikacja
+- Używanie aplikacji, np. Netflix, Gmail itd
