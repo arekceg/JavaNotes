@@ -33,3 +33,4 @@
 - Producent podpisuje dane używając swojego prywatnego klucza
 - Konsument używa publicznego klucza żeby potwierdzić że dane zostały na pewno wysłane przez tego konkretnego producenta
 
+

@@ -234,3 +234,37 @@ Przykład subnettingu:
 	- zapytania DNS o fałszywy adres IP
 	- wykorzystuje fakt że zapytanie DNS jest tanie i małe ale może zwracać bardzo dużo danych
 	- nie atakuje bezpośrednio serwerów aplikacji a serwery DNS
+
+### Secure Sockets Layer SSL, Transport Layer Security TLS
+
+- TLS używa asymetrycznej enkrypcji do wymiany kluczy prywatnych i potem SSL używa symetrycznej do autentykacji
+- TLS używa już otwartego kanału TCP
+- TLC pozwala określić prawdziwość serwera z którym się komunikuje
+- Trzy fazy:
+	1.	Cipher Suites
+	2.	Authentication
+	3.	Key Exchange
+
+#### Cipher Suites
+1.	Klient wysyła `Client HALLO`
+	- lista wspieranych Cipher Suites, wersja SSL/TLS, SessionId
+	-	Jeżeli serwer nie wspiera żadnego z wysłanych przez klienta Cipher Suites - połączenie jest zamykane
+2.	Serwer zwraca `Server HALLO`
+	- w nim certyfikat serwera zwierający publiczny klucz
+
+#### Authentication
+- Ustalamy czy serwer jest tym za kogo się podaje 
+1.	Klient sprawdza czy certyfikat który otrzymał:
+	-	jest podpisany przez Public Certificate Authority
+	- nie jest expired
+	- nie był revoked
+	- sprawdza czy nazwa domeny serwera zgadza się z domeną na certyfikacie
+2.	Klient używa public key serwera do zakodowania jakichś danych i upewnia sie że serwer może je odkodować 
+
+- jeżeli wszystko się zgadza to wiemy że serwer jest tym za kogo sie podaje
+
+#### Key Exchange
+1.	Klient zakodowuje public kluczem serwera nowy klucz prywatny `Pre-Master Key` i wysyła go do serwera
+2.	Serwer odkodowuje ten klucz
+3.	Serwer i klient używając tego samego Cypher Suite generują z Pre-Master Key `Master Secret` 
+4.	Używając Master Secret generowane są `Session Keys` które są następnie używane do zakodowywania danych
