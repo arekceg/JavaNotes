@@ -210,7 +210,7 @@
 	-	`172.16.0.0 - 172.31.255.255`
 		- 16 x Class B Network
 	- `192.168.0.0 - 192.168.255.255` (certified hood classic adresów IP)
-		-	256 x Class C Networkj
+		-	256 x Class C Network
 	- potem te adresy są tłumaczone na publiczny używąć NAT
 
 Przykład subnettingu:
@@ -219,7 +219,11 @@ Przykład subnettingu:
 - Jak podbijemy prefix do `/17` tworzą nam sie dwie sieci
 	1.	`10.16.0.0` - `10.16.127.255`
 	2.	`10.16.128.0` - `10.16.128.255`
-	- Wtedy z sieci tworzą się dwie podsieci, jedna z `1` a druga z `0` w dodatkowym bicie prefixu
+	- Wtedy z sieci tworzą się dwie podsieci, jedna z `1` a druga z `0` w dodatkowym bicie prefixu (subnet bit)
+
+- Network ID - __pierwszy__ adres z danego subnetu
+- Broadcast ID - __ostatni__ adres z danego subnetu
+- Więc dla hostów zostaje mniej o 2 adresy do podziału
 
 ### IPv6
 - 340 sekstylionów adresów xD
