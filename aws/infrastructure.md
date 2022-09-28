@@ -41,3 +41,8 @@
 
 #### AZ Resilient
 - Serwisy które istenieją w konteście jednego AZ
+
+### ARN
+- Amazon Resource Name
+- Unikalny identyfikator zasobu AWS w formacie:
+	`arn:partition:service:region:account-id:resource`
