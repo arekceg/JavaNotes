@@ -61,6 +61,7 @@ Podstawowe:
 ### Tworzenie EC2
 1. Stworzyć parę kluczy
 	`EC2` -> `Key Pairs`
+	 **EXAM** KeyName to nazwa KeyPair 
 2. Stworzyć instancję
 	`Instances` -> `Launch an instance`
 3. W trakcie tworzymy nowy Secuity Group

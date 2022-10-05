@@ -1,6 +1,5 @@
 ## CloudFormation
 
-
 ### TEMPLATKA
 - Templatka tworzy `Stack` 
 - `Stack` zawiera wszystkie poprawnie zdefiniowane przez templatkę zasoby (`Logical Resources`)
@@ -9,7 +8,7 @@
 
 ### Tworzenie
 - `CloudFormation`->`Create Stack`
-- Przy uploadowaniu templatki do CF tworzy się nowy bucket w który jest wrzucana
+- Przy uploadowaniu templatki do CF tworzy się nowy bucket S3 w który jest wrzucana
 
 ### SKŁADOWE TEMPLATKI 
 
@@ -26,6 +25,12 @@
 #### Parameters
 - Definiujemy parametry które musi podać user templatki CF
 
+Np: 
+- `LatestAmiId`	
+	- zwróci Id najnowszej wersji danego AMI (obrazu maszyny amazonowej)
+- `KeyName`
+	- nazwa pary kluczy do autentykacji połączenia z zasobem
+
 #### Mappings
 -	Lookup tables
 
@@ -41,4 +46,19 @@
 
 #### Output
 - Określanie tego co wypluwa templatka
+
+
+### CLOUD FORMATION FUNCTION (funkcje)
+
+#### `!Ref`
+Referencja do innej częci templatki
+
+#### `!GetAtt`
+Umożliwia pobranie konkretnej danej z zasobu, np
+```
+	Value: !GetAtt
+	 - EC2Instance
+	 - AvailabilityZone
+```
+Pobierze informacje o AZ z instacji EC2
 
