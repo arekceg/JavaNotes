@@ -46,3 +46,28 @@
 - Amazon Resource Name
 - Unikalny identyfikator zasobu AWS w formacie:
 	`arn:partition:service:region:account-id:resource`
+
+### **EXAM** Shared Responsibility Model
+
+- AWS jest odpowiedzialny za bezpieczeństwo chmury
+- Klient jest odpowiedzialny za bezpieczeństwo __w__ chmurze
+
+### High-Availibilty
+- Aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period
+- Nie oznacza to systemu __non stop__ dostępnego który nigdy nie pada
+- Oznacza to system który jest __up__ tak często jak się da i który po padnięciu jest w stanie szybko się podnieść
+- Maksymalizacja czasu kiedy system jest online
+- Availiblity można przedstawiać np.
+	- Three 9's - 99.9% availibility (8.77 h downtime na rok)
+	- Five 9's - 99.999% availibility (5.26 min downtime na rok) 
+- Np w wypadku failu jednego serwera przełączamy sie na drugi serwer
+	- User może doświadczyć małej czkawki czy chwilowego przerwania dostaw usług i to jest ok
+
+### Fault-Tolerance
+- Property that enables a system to continue operating propertly in the event of the failure of some (one or more faults within) of its components
+- System projektujemy tak żeby przerwał usterki bez przerywania dostawy usług
+- HA się w tym mieści
+- Np. kiedy korzystamy z dwóch serwerów jednoczesnie to jak jeden padnie to bez zatknięcia możemy dalej używać drugiego bez konieczności przepinania się 
+
+### Disaster Recovery
+- A set of policies, tools and procedures to enable the recovery or continuation of vital technology ifrastructure and systems following a natural or human-induces disaster
