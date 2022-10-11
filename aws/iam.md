@@ -1,6 +1,5 @@
 ## IAM
 
-
 - Identity and Access Management
 - Służy do tworzenia dodatkowych indentities w ramach jednego konta
 - Pozwala na ograniczanie dostępów różnym identities
@@ -47,8 +46,26 @@
 
 -	`Security Credentials` -> `MFA` -> `Activate MFA`
 
+### Principal
+- Pojęcie AWS oznaczające __coś__ lub __zbiór cosi__ potrzebujących uzyskać dostęp do konta AWS
+
+#### Authentication
+- Principal musi się autentykować przez IAM
+	- username i password
+	lub
+	- Access Keys
+- Po autentykacji Principal staje się `Authenticated Identity`
+
+#### Authorization
+- Po autoryzacji i sprawdzeniu Policy AWS wie jakie Policy Statement łączą się z tą Identity więc wie jakie ma dostępy
+
 ### USER
 - Mapuje sie na jednego użytkownika danego konta, np. jednego devleopera lub jedną aplikację 
+- IAM Users are an identity used for anything requiring __long-term__ AWS access e.g. Humans, Applications, Service Accounts
+- **EXAM** Jeżeli mamy dać dostęp do konta __jednej, konkretnej__ rzeczy którą potrafimy nazwać to w 99% przypadków chodzi o identity IAM User
+- **EXAM** Konto może mieć max 5000 IAM Userów (per konto, nie per region)
+- **EXAM** IAM User może byc członkiem maksymalnie 10 grup
+
 
 ### GROUP
 - Zbiór userów
@@ -92,3 +109,50 @@
 - `Security Credentials` -> `Create Access Key`
 
 
+### IAM Identity Policies 
+- Pozwalają na szczegółowe ustawienie polityk dostępu do zasobów AWS
+- Definicja Policy to JSON
+- Policy musi posiadać 1 lub więcej `Statement`
+
+#### Statement
+- Głównym elementem Statementu jest połączenie Action + Resource
+- W momencie wykonania danej Action na danym Resource sprawdzany jest Statemento
+
+Składowe:
+- `Sid`
+	- Opcjonalne pole
+	- Pozwala nazwać / opisać statemen
+-	`Action`
+	-	Jedna lub wiele akcji których dotyczy Statement
+	- Dopuszcza wildcardy
+- `Resource`
+	-	Zasób / zasoby na którym akcję definiujemy
+	- Dopuszcza wildcardy
+-	`Effect`
+	- `Allow` lub `Deny`
+	- Mówi czy dopuszczamy wykonanie danej akcji na zasobie czy nie 
+
+Overlap:	Jeżeli jeden Statement daje Allow na szeroki zakres zasobu a drugi Deny na mniejszy obszar tego samego zasobu
+Priorytetyzacja w takim wypadku:
+`Deny, Allow, Deny`
+-	Explicit DENY
+	- Jeżeli robimy `Deny` na jakąkolwiek część zasobu to nie ma do niej dostępu, koniec kropka
+- Explicit ALLOW
+	-	Jeżeli zrobimy explicite `Allow` na jakiś zasób to będzie on dostępny
+	- Chyba że na ten zasób istnieje już explicite `Deny`
+- Default DENY
+	- AWS Identities domyślnie zaczynają nie mając w ogóle dostepów do zasobów AWS
+	- Więc jeżeli nie zrobimy explicte `Allow` to Identity nie będzie miała dostępu do danego zasobu
+
+Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyskać dostep do zasobu który ma ustawione Policy to AWS łączy te wszystkie Policy ze sobą i tak określa ostateczne uprawnienia. Zasada `Deny Allow Deny` obowiązuje niezależnie od ilości zagregowanych Policy
+
+#### Inline Policy
+- Policy nadawane każdego userowi z osobna
+- Dla trzech userów powstają wtedy 3 oddzielne policy
+- Używane tylko w wyjątkowych wypadkach kiedy np. dla jednego usera musimy nadać lub odebrać uprawnienia 
+
+#### Managed Policy
+- Policy tworzona _raz_ i przypisywana potem do różnych identities
+- Reusable
+- Low Management Overhead
+- Powinny być używane `for normal, default operation rights`

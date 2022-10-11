@@ -44,15 +44,21 @@
 
 ### ARN
 - Amazon Resource Name
-- Unikalny identyfikator zasobu AWS w formacie:
+- __Unikalny__ identyfikator zasobu AWS w formacie:
 	`arn:partition:service:region:account-id:resource`
+- Dopuszcza wildcardy, dzięki temu możemy odnosić się do grupy zasobów
+- Niektóre częsci ARN można opuścić kiedy nie mają znaczenia, np dla S3 (globalny serwis) opuszczamy region i konto
+	`arn:aws:s3:::foo`
+- Po zasobie można się jeszcze odnieść do konkretnych częsci zasobu, np
+	`arn:aws:s3:::foo/*`
+	- w tym wypadku odnosimy się do wszystkiego w buckecie `foo` ale nie do __samego__ bucketu `foo`
 
 ### **EXAM** Shared Responsibility Model
 
 - AWS jest odpowiedzialny za bezpieczeństwo chmury
 - Klient jest odpowiedzialny za bezpieczeństwo __w__ chmurze
 
-### High-Availibilty
+### High Availibilty
 - Aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period
 - Nie oznacza to systemu __non stop__ dostępnego który nigdy nie pada
 - Oznacza to system który jest __up__ tak często jak się da i który po padnięciu jest w stanie szybko się podnieść

@@ -1,7 +1,7 @@
 ## DNS
 
 - Wielka baza danych która pozwala na konwertowanie adresów HTTP na adresy IP, np `netflix.com` -> `44.240.158.19`
-
+- `dig foo.com` - sprawdzewnie DNS danej domeny
 
 ### DNS ZONE
 A DNS zone is a portion of the DNS namespace that is managed by a specific organization or administrator.
@@ -86,3 +86,44 @@ Dodaje:
 - Są to rekordy w Parent Zone które przechowują oczekiwane hashe publicznych KSK z Zon niższych, dzięki czemu wiemy czy publiczny KSK został zmieniony
 - Potem taki RRSET tych DSów jest podpisywany ZSK Parent Zony i publiczny ZSK Parent Zony jest podpisywany KSK, temu KSK możemy zaufać bo jest połączony z Parent Zoną Parent Zony (czyli Root Zone najczęściej) poprzez jej DS Recordy
 - Kluczom w Root Zofe ufamy bezpośrednio
+
+### Pozostałe typy DNS Records
+
+#### NS (Nameserver) Records
+- Wpisy w danej Zone kierujące do konkretnych serwerów poniższej Zone
+	- np. wpisy w zonie `.com` dla domeny `foo.com` kierujące do nameserwerów hostowanych przez właściciela domeny `foo.com` gdzie następuje odpowiednie przekierowanie do domeny
+
+#### A i AAAA
+- Te rekordy mapują domenę na konkretny adres IP
+- Rożnica jest taka że 
+	- A mapuje na IPv4
+	- AAAA mapuje na IPv6
+
+#### CNAME
+-	Umożliwiają mapowanie kilku adresów domen do jednego hosta, np. `ftp.foo.com` `mail.foo.com` `www.foo.com` będą wszystkie wskazywały na jeden adres IP
+- **EXAM** CNAME nie mogą wskazywać bezpośrednio na adres IP, tylko na inny host
+
+#### MX
+- Rekordy służące do emaili
+- Dzięki nim można znaleźc serwer mailowy danej domeny (SMTP)
+- Każdy rekord ma Priority i Adres
+	- Im niższa cyfra `Priority` ten adres będzie użyty najpierw
+	- Jeżeli adres ma `.` na końcy to znaczy że jest to konkretny adres domeny
+	- Jeżeli nie ma to jest częścią głownej domeny
+	-	np dla domeny `foo.com`:
+		`mail.incoming` oznacza adres `mail.incoming.foo.com`
+		`mail.incoming.` oznacza adres `mail.incoming`
+
+#### TXT
+- Można dodać dowolny tekst
+- Może służyć np. do potwierdzenia właścicielstwa domeny
+	- np. jakiś agent może nas poprosić żebyśmy dodali TXT `foo bar` 
+	- dodajemy `foo bar`
+	- agent sprawdza i wie że to my bo dodaliśmy `foo bar`
+
+### DNS TTL (Time To Live)
+- Informuje nas jak długo będą cachowane rezultaty naszego DNS query
+- Po tym czasie znów będziemy musieli przejść drzewo DNS od roota do nameservera z domena której potrzebujemy
+- Jeżeli planujemy zmieniać coś w rekordach DNS to wskazane jest obniżyć wartość TTL żeby klienci nie strzelali na nieaktulane, zkaszowane, adresy
+
+
