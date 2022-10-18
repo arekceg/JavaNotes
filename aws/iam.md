@@ -59,26 +59,68 @@
 #### Authorization
 - Po autoryzacji i sprawdzeniu Policy AWS wie jakie Policy Statement łączą się z tą Identity więc wie jakie ma dostępy
 
-### USER
+### IAM User
 - Mapuje sie na jednego użytkownika danego konta, np. jednego devleopera lub jedną aplikację 
 - IAM Users are an identity used for anything requiring __long-term__ AWS access e.g. Humans, Applications, Service Accounts
 - **EXAM** Jeżeli mamy dać dostęp do konta __jednej, konkretnej__ rzeczy którą potrafimy nazwać to w 99% przypadków chodzi o identity IAM User
 - **EXAM** Konto może mieć max 5000 IAM Userów (per konto, nie per region)
+- **EXAM** Jeżeli musimy dać dostęp do konta dużej ilości użytkowników lub pozwolić na rejestrację się z internetu to nie wolno używać IAM User bo wyczerpiemy to 5000 szybko
 - **EXAM** IAM User może byc członkiem maksymalnie 10 grup
 
 
-### GROUP
+### IAM Group
 - Zbiór userów
+- **EXAM** Nie da się zalogować do IAM Group, jest to tylko kontener na IAM Users
+- **EXAM** Jeden IAM User może być członkiem wielu (max 10) IAM Group
+- **EXAM** Domyślnie nie istnieje jedna _all users_ IAM Group która zawiera wszystkich IAM Userów
+- **EXAM** IAM Groupy nie są nestowalne, nie można mieć grupy w grupie
+- **EXAM** Konto domyślnie może mieć max 300 IAM Groups, ale można to zwiększyć support tiketem
+- **EXAM** IAM Group is __not__ a `true identity` and cannot be referenced as a `principal` in a policy - do roli czy do usera mozemy dostać konkretny ARN, a do grupy __nie__. W związku z tym IAM Policy przypięte do jakiegos zasobu (Resource Policy) nie będzie w stanie odnieść się do konkretnej IAM Group (bo odnosi się do IAM Identity po ARN)
 
-### ROLE
-- Służy do szczegółowego nadawania uprawnień dla __nieznanej__ ilości agentów
+- Grupy mogą mieć wiele IAM Policy podpięte, i Inline Policy i Managed Policy
+
+### IAM Role
+- **EXAM** IAM Role służy do szczegółowego nadawania uprawnień dla __nieznanej__ ilości principali
 - Używane przez różne AWS Serwisy
-- Może umożliwić dostęp do konta z zewnątrz
-- Role mogą być przypisywane nie tylko do userów ale do serwisów też. np. można nadać EC2 rolę która pozwoli na dostęp do S3
+- Może umożliwić dostęp do konta z zewnątrz - Role mogą być przypisywane nie tylko do userów ale do serwisów też. np. można nadać EC2 rolę która pozwoli na dostęp do S3
+	-	Np. Możemy nadać Lambdzie `Lambda Execution Role` która ma Trust Policy takie że może być nadawana lambdom
+	- Taka rola jest przydzielana lambdzie w momencie jej wykonania i na czas jej wykonania - w takim wypadku całe Runtime Environment Lambdy przymuje rolę Foo i używa tymczasowych credentiali do wykonania operacji
+- IAM Role jest też używany jako coś tymczasowego - na pewien czas otrzymujes rolę `Foo` a potem już nie 
+	- np. Apka mobilna dostaje jakąś IAM Role na moment requestu, strzela do AWS jako Rola `Foo` a potem już tej roli nie ma
+- IAM Role nie reprezentuje __czym__ jest principal, ale mówi o dostępach jakie ma wewnątrz AWS
+- **EXAM** IAM Role to __real identity__ czyli może być referncowana przez ARN
 
-### POLICY
-- Zestaw dostępów/zabronień dostępu do serwisów AWS
-- Muszą być podłączone do konkretnych User, Group lub Role 
+- IAM Role ma dwa typy IAM Policy:
+	1.	Trust Policy
+		-	Określa co i kto może przyjmować raną IAM Role
+		- Do przyjęcia roli używana jest operacja `sts:AssumeRole` (STS - Security Token Service) i STS generuje Temporary Security Credentials
+		- Jeżeli principal może przyjąć rolę Foo to AWS generuje Temporary Security Credentials dla principala
+		- Te credentiale umożliwiają dostęp do zasobów zdefiniowanych w Permissions Policy
+		- Dzięki Temporary Security Credentials unikamy konieczności hardkodowania kredek np. w Lambdach, Lambda pobiera tymczasowe kredki przy każdym wywołaniu
+	2.	Permissions Policy
+
+#### Break Glass Situation
+- Sytuacja awaryjna kiedy nagle, na krótki czas, potrzeba userowi nadać dodakowe uprawnienia
+- IAM Role sie tu przydają bo nie trzeba modyfikować uprawnień usera, user może po prostu przyjąć rolę z większymi uprawnieniami, ugasić pożar i wrócić do swoich standarowych uprawnień
+
+#### IAM Role i External Identities (ID Federation)
+- IAM Role mogą służyć do nadania uprawnień do zasobów AWS zewnętrznym Identities, np. kontom Google, Facebook itd
+- Takie External Identities nie mogą mieć bezpośredniego dostepu do zasobów AWS
+
+#### Obsługa dużej ilości userów aplikacji mobilnej (Web Identity Federation)
+- Używanie IAM Role do obsługi dużej ilości użytkowników
+- Użytkownicy używają istniejących zewnętrznych Identity
+
+#### Service-linked IAM Role
+- IAM Role przypisana do danego serwisu, predefiowana przez ten serwis
+-	Zapewnia uprawnienia których potrzebuje ten serwis żeby komunikować się z innymi serwisami AWS
+-	Tworzona przez serwis automatycznie w momencie jego tworzenia lub ręcznie przez usera
+- Nie można manualnie usunąć Service-Linked IAM Role
+
+#### IAM PassRole
+- Umożliwia pozwolenie IAM Userowi na przypisywanie istniejących ról serwisom
+- Role te mogą mieć większe uprawnienia niż ten IAM User
+- https://blog.rowanudell.com/iam-passrole-explained/
 
 ### Tworzenie IAM Admin
 
@@ -108,8 +150,9 @@
 #### Tworzenie Access Keys
 - `Security Credentials` -> `Create Access Key`
 
-
-### IAM Identity Policies 
+### IAM Identity Policies (Policy)
+- Zestaw dostępów/zabronień dostępu do serwisów AWS
+- Muszą być podłączone do konkretnych User, Group lub Role 
 - Pozwalają na szczegółowe ustawienie polityk dostępu do zasobów AWS
 - Definicja Policy to JSON
 - Policy musi posiadać 1 lub więcej `Statement`
@@ -150,9 +193,11 @@ Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyska
 - Policy nadawane każdego userowi z osobna
 - Dla trzech userów powstają wtedy 3 oddzielne policy
 - Używane tylko w wyjątkowych wypadkach kiedy np. dla jednego usera musimy nadać lub odebrać uprawnienia 
+- Dodawane np. przez `Add inline policy` w zakładce `Permissions` dla danego usera
 
 #### Managed Policy
 - Policy tworzona _raz_ i przypisywana potem do różnych identities
 - Reusable
 - Low Management Overhead
 - Powinny być używane `for normal, default operation rights`
+- Dodawane np. przez `Add permissions` w zakładce `Permissions` dla danego usera
