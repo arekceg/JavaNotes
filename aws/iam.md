@@ -1,4 +1,4 @@
-## IAM
+# IAM
 
 - Identity and Access Management
 - Służy do tworzenia dodatkowych indentities w ramach jednego konta
@@ -25,11 +25,11 @@
 		- po autentykacji agent staje się Authenticated Identity
 	- Authorize - pozwala lub nie na dostęp do zasobów i serwisów AWS
 - IAM nic nie kosztuje
-- IAM nie potrafi kontrolować co może a czego nie user z __zewnętrznego__ konta
+- IAM nie potrafi kontrolować co może a czego nie user z **zewnętrznego** konta
 - IAM pozwala na korzystanie z `Identity Federation` i `MFA`
 - Dobrą praktyką jest używanie root usera tylko do stworzenia konta a potem używanie konta w stylu `IAM Admin` które ma też szerokie uprawnienia, ale w przeciwieństwie do konta root można je ograniczyć w razie potrzeby
 
-### AWS ACCOUNTS
+## AWS ACCOUNTS
 
 -	Konto AWS to **kontener** na `identities` i `resources`
 	-	`identity` to może być user, group lub role
@@ -42,53 +42,53 @@
 - Warto mieć wiele kont AWS w zależności od klienta, środowiska, zespołu itd
 	-	 dzięki temu jak ktoś borknie jedno konto to są inne konta które cały czas działają 
 
-### MFA
+## MFA
 
 -	`Security Credentials` -> `MFA` -> `Activate MFA`
 
-### Principal
-- Pojęcie AWS oznaczające __coś__ lub __zbiór cosi__ potrzebujących uzyskać dostęp do konta AWS
+## Principal
+- Pojęcie AWS oznaczające **coś** lub **zbiór cosi** potrzebujących uzyskać dostęp do konta AWS
 
-#### Authentication
+### Authentication
 - Principal musi się autentykować przez IAM
 	- username i password
 	lub
 	- Access Keys
 - Po autentykacji Principal staje się `Authenticated Identity`
 
-#### Authorization
+### Authorization
 - Po autoryzacji i sprawdzeniu Policy AWS wie jakie Policy Statement łączą się z tą Identity więc wie jakie ma dostępy
 
-### IAM User
+## IAM User
 - Mapuje sie na jednego użytkownika danego konta, np. jednego devleopera lub jedną aplikację 
-- IAM Users are an identity used for anything requiring __long-term__ AWS access e.g. Humans, Applications, Service Accounts
-- **EXAM** Jeżeli mamy dać dostęp do konta __jednej, konkretnej__ rzeczy którą potrafimy nazwać to w 99% przypadków chodzi o identity IAM User
+- IAM Users are an identity used for anything requiring **long-term** AWS access e.g. Humans, Applications, Service Accounts
+- **EXAM** Jeżeli mamy dać dostęp do konta **jednej, konkretnej** rzeczy którą potrafimy nazwać to w 99% przypadków chodzi o identity IAM User
 - **EXAM** Konto może mieć max 5000 IAM Userów (per konto, nie per region)
 - **EXAM** Jeżeli musimy dać dostęp do konta dużej ilości użytkowników lub pozwolić na rejestrację się z internetu to nie wolno używać IAM User bo wyczerpiemy to 5000 szybko
 - **EXAM** IAM User może byc członkiem maksymalnie 10 grup
 
 
-### IAM Group
+## IAM Group
 - Zbiór userów
 - **EXAM** Nie da się zalogować do IAM Group, jest to tylko kontener na IAM Users
 - **EXAM** Jeden IAM User może być członkiem wielu (max 10) IAM Group
 - **EXAM** Domyślnie nie istnieje jedna _all users_ IAM Group która zawiera wszystkich IAM Userów
 - **EXAM** IAM Groupy nie są nestowalne, nie można mieć grupy w grupie
 - **EXAM** Konto domyślnie może mieć max 300 IAM Groups, ale można to zwiększyć support tiketem
-- **EXAM** IAM Group is __not__ a `true identity` and cannot be referenced as a `principal` in a policy - do roli czy do usera mozemy dostać konkretny ARN, a do grupy __nie__. W związku z tym IAM Policy przypięte do jakiegos zasobu (Resource Policy) nie będzie w stanie odnieść się do konkretnej IAM Group (bo odnosi się do IAM Identity po ARN)
+- **EXAM** IAM Group is **not** a `true identity` and cannot be referenced as a `principal` in a policy - do roli czy do usera mozemy dostać konkretny ARN, a do grupy **nie**. W związku z tym IAM Policy przypięte do jakiegos zasobu (Resource Policy) nie będzie w stanie odnieść się do konkretnej IAM Group (bo odnosi się do IAM Identity po ARN)
 
 - Grupy mogą mieć wiele IAM Policy podpięte, i Inline Policy i Managed Policy
 
-### IAM Role
-- **EXAM** IAM Role służy do szczegółowego nadawania uprawnień dla __nieznanej__ ilości principali
+## IAM Role
+- **EXAM** IAM Role służy do szczegółowego nadawania uprawnień dla **nieznanej** ilości principali
 - Używane przez różne AWS Serwisy
 - Może umożliwić dostęp do konta z zewnątrz - Role mogą być przypisywane nie tylko do userów ale do serwisów też. np. można nadać EC2 rolę która pozwoli na dostęp do S3
 	-	Np. Możemy nadać Lambdzie `Lambda Execution Role` która ma Trust Policy takie że może być nadawana lambdom
 	- Taka rola jest przydzielana lambdzie w momencie jej wykonania i na czas jej wykonania - w takim wypadku całe Runtime Environment Lambdy przymuje rolę Foo i używa tymczasowych credentiali do wykonania operacji
 - IAM Role jest też używany jako coś tymczasowego - na pewien czas otrzymujes rolę `Foo` a potem już nie 
 	- np. Apka mobilna dostaje jakąś IAM Role na moment requestu, strzela do AWS jako Rola `Foo` a potem już tej roli nie ma
-- IAM Role nie reprezentuje __czym__ jest principal, ale mówi o dostępach jakie ma wewnątrz AWS
-- **EXAM** IAM Role to __real identity__ czyli może być referncowana przez ARN
+- IAM Role nie reprezentuje **czym** jest principal, ale mówi o dostępach jakie ma wewnątrz AWS
+- **EXAM** IAM Role to **real identity** czyli może być referncowana przez ARN
 
 - IAM Role ma dwa typy IAM Policy:
 	1.	Trust Policy
@@ -99,30 +99,30 @@
 		- Dzięki Temporary Security Credentials unikamy konieczności hardkodowania kredek np. w Lambdach, Lambda pobiera tymczasowe kredki przy każdym wywołaniu
 	2.	Permissions Policy
 
-#### Break Glass Situation
+### Break Glass Situation
 - Sytuacja awaryjna kiedy nagle, na krótki czas, potrzeba userowi nadać dodakowe uprawnienia
 - IAM Role sie tu przydają bo nie trzeba modyfikować uprawnień usera, user może po prostu przyjąć rolę z większymi uprawnieniami, ugasić pożar i wrócić do swoich standarowych uprawnień
 
-#### IAM Role i External Identities (ID Federation)
+### IAM Role i External Identities (ID Federation)
 - IAM Role mogą służyć do nadania uprawnień do zasobów AWS zewnętrznym Identities, np. kontom Google, Facebook itd
 - Takie External Identities nie mogą mieć bezpośredniego dostepu do zasobów AWS
 
-#### Obsługa dużej ilości userów aplikacji mobilnej (Web Identity Federation)
+### Obsługa dużej ilości userów aplikacji mobilnej (Web Identity Federation)
 - Używanie IAM Role do obsługi dużej ilości użytkowników
 - Użytkownicy używają istniejących zewnętrznych Identity
 
-#### Service-linked IAM Role
+### Service-linked IAM Role
 - IAM Role przypisana do danego serwisu, predefiowana przez ten serwis
 -	Zapewnia uprawnienia których potrzebuje ten serwis żeby komunikować się z innymi serwisami AWS
 -	Tworzona przez serwis automatycznie w momencie jego tworzenia lub ręcznie przez usera
 - Nie można manualnie usunąć Service-Linked IAM Role
 
-#### IAM PassRole
+### IAM PassRole
 - Umożliwia pozwolenie IAM Userowi na przypisywanie istniejących ról serwisom
 - Role te mogą mieć większe uprawnienia niż ten IAM User
 - https://blog.rowanudell.com/iam-passrole-explained/
 
-### Tworzenie IAM Admin
+## Tworzenie IAM Admin
 
 - Wchodzmy w `IAM`
 - Mamy tam `Sign-in URL for IAM users in this account` czyli URL którego będą używali userzy IAM do logowania się na to konto AWS
@@ -132,7 +132,7 @@
 - Jako permissions dajemy `AdministratorAccess`
 - Potem możemy się zalogować używając stworzonego loginu przez wyżej stworzony alias albo przez globalną stronę AWS
 
-### ACCESS KEYS
+## ACCESS KEYS
 - Long Term Credentials 
 	-	nie zmienjają się automatycznie
 - hasło + login -> logowanie przez stronę
@@ -147,17 +147,17 @@
 	1. Access Key ID 
 	2. Secret Access Key (wyświetlane tylko raz, przy tworzeniu pary!!!)
 
-#### Tworzenie Access Keys
+### Tworzenie Access Keys
 - `Security Credentials` -> `Create Access Key`
 
-### IAM Identity Policies (Policy)
+## IAM Identity Policies (IAM Policy)
 - Zestaw dostępów/zabronień dostępu do serwisów AWS
 - Muszą być podłączone do konkretnych User, Group lub Role 
 - Pozwalają na szczegółowe ustawienie polityk dostępu do zasobów AWS
 - Definicja Policy to JSON
 - Policy musi posiadać 1 lub więcej `Statement`
 
-#### Statement
+### Statement
 - Głównym elementem Statementu jest połączenie Action + Resource
 - W momencie wykonania danej Action na danym Resource sprawdzany jest Statemento
 
@@ -189,15 +189,42 @@ Priorytetyzacja w takim wypadku:
 
 Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyskać dostep do zasobu który ma ustawione Policy to AWS łączy te wszystkie Policy ze sobą i tak określa ostateczne uprawnienia. Zasada `Deny Allow Deny` obowiązuje niezależnie od ilości zagregowanych Policy
 
-#### Inline Policy
+### Inline Policy
 - Policy nadawane każdego userowi z osobna
 - Dla trzech userów powstają wtedy 3 oddzielne policy
 - Używane tylko w wyjątkowych wypadkach kiedy np. dla jednego usera musimy nadać lub odebrać uprawnienia 
 - Dodawane np. przez `Add inline policy` w zakładce `Permissions` dla danego usera
 
-#### Managed Policy
+### Managed Policy
 - Policy tworzona _raz_ i przypisywana potem do różnych identities
 - Reusable
 - Low Management Overhead
 - Powinny być używane `for normal, default operation rights`
 - Dodawane np. przez `Add permissions` w zakładce `Permissions` dla danego usera
+
+### Service Control Policy
+- Specjalny tym IAM Policy któro jest nadawane częsciom IAM Organization
+- Może być nadane organization-wide, per Organization Unit lub nawet per konto w organizacji
+	-	Propaguje się wgłąb organizacji, tzn jeżeli OU któremu nadajemy SCP ma w sobie pomniejsze OU to SCP odniesie się do nich też
+- Samo z siebie **nie nadaje i odejmuje uprawnień** ale określa **jakie uprawnienia możemy i nie możemy nadać przez IAM Policy**
+	- SCP Defines account permissions boundaries
+	- Określa granice uprawnień dla zwykłych userów i dla root userów **też**
+		(Root User ma **zawsze** nieograniczone uprawnienia do wszystkiego co można zrobic na koncie, ale SCP ogranicza **co** można zrobić na koncie)
+- **SCP NIE DZIAŁA NA MANAGEMENT ACCOUNT**
+
+#### Allow list vs Deny list
+**Deny List**
+- Allow by default, block selected services
+- Defaultowa opcja
+	- AWS nadaje organizacji Policy `FullAwsAccess`
+
+**Allow List**
+- Block by default, allow selected services
+1.	Usunąć domyślną `FullAwsAccess` Policy
+2.	Dodać nową SCP z konkretnymi allowami
+
+#### Aktywowanie SCP
+1.	AWS Organizations
+2.	Policies
+3.	SCP -> Enable SCP
+4.	AWS Accounts -> Klik na wybrane OU -> Policies -> Attach Policy
