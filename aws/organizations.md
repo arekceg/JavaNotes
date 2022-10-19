@@ -40,3 +40,7 @@ Tworzenie IAM Role dostępnej dla głównego konta IAM Organization na koncie do
 4.	Standardowa nazwa takiej roli to `OrgnizationAccountAccessRole`
 5.	Potem możemy użyć `Switch Role`, podać nr konta do którego chcemy dostęp i nazwę roli którą stworzyliśmy i uzyskamy dostęp do tego konta 
 	-	Pod maską AWS przydziela nam tą rolę używająć tymczasowych credentiali
+
+## Dzielenie organizacji
+1.	Wybrać `Root` lub inny OU który chcemy podzielić
+2.	Action -> Create New
