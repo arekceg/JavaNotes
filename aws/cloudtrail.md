@@ -32,3 +32,15 @@
 
 ### Organizational Trail
 - Jeżeli Trail zostanie stworzony przez Management Account AWS Organization to taki Trail może zbierać eventy ze wszystkich kont z organizacji
+- Minus: taki Trail może generować znaczne koszty bo oprócz przechowywania samych logów na S3 płacimy tez za każdy request od każdego konta żeby wrzucić coś do S3
+
+### Tworzenie Traili
+1. AWS CloudTrail 
+2. Trails -> Create Trail
+	- Konfiuracja bucketu S3 do trzymania logów
+	- Logi będa trzymane w folderze `<bucket>/AWSLogs/<losowe id>/<losowe id>`
+
+- Nawet jak nie ma Traili to mamy dostęp do `Event History` gdzie jest przez 90 dni za darmo przechowywana historia eventów CloudTrailowych
+
+### Wyłączanie Traili
+1. Wybierz Trail -> Wejdź w niego -> `Stop Logging`
