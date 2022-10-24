@@ -89,6 +89,7 @@
 	- np. Apka mobilna dostaje jakąś IAM Role na moment requestu, strzela do AWS jako Rola `Foo` a potem już tej roli nie ma
 - IAM Role nie reprezentuje **czym** jest principal, ale mówi o dostępach jakie ma wewnątrz AWS
 - **EXAM** IAM Role to **real identity** czyli może być referncowana przez ARN
+- **EXAM** Nie można się logowąć na IAM Role
 
 - IAM Role ma dwa typy IAM Policy:
 	1.	Trust Policy
@@ -156,6 +157,7 @@
 - Pozwalają na szczegółowe ustawienie polityk dostępu do zasobów AWS
 - Definicja Policy to JSON
 - Policy musi posiadać 1 lub więcej `Statement`
+- **EXAM** Inny typ Policy to Resource Policy - nadawane zasobom o okreslające kto ma jakie uprawnienia do pracy z nimi
 
 ### Statement
 - Głównym elementem Statementu jest połączenie Action + Resource
@@ -201,6 +203,12 @@ Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyska
 - Low Management Overhead
 - Powinny być używane `for normal, default operation rights`
 - Dodawane np. przez `Add permissions` w zakładce `Permissions` dla danego usera
+
+### Customer Managed Policy
+- **EXAM** Customer Managed Policy to każda IAM Policy którą tworzymy my jako klient AWSa
+
+### AWS Managed Policy
+- **EXAM** Customer Managed Policy to każda IAM Policy która jest tworzona przez AWS
 
 ### Service Control Policy
 - Specjalny tym IAM Policy któro jest nadawane częsciom IAM Organization
