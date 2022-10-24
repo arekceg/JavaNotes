@@ -236,3 +236,14 @@ Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyska
 2.	Policies
 3.	SCP -> Enable SCP
 4.	AWS Accounts -> Klik na wybrane OU -> Policies -> Attach Policy
+
+### Resource Policy
+- Resource Policy to typ Policy oddzielny od IAM Policy
+- Pozwala na nadawanie uprwanień z perspektywy zasobu
+- Pozwala na nadawanie uprawnień dla identities z danego konta jak i z kont zewnętrznych
+	- Nadawane Policy może referencować ARNy różnych Identities
+	- Trusted account musi mieć Identity Policy któro pozwala na dostęp do zasobu ogólnie i do naszego konkrentego zasobu
+	- Trusting account musi mieć Resource Policy któro pozwala identity z Trusted Account na dostęp do tego zasobu
+- Resource Policy w przeciwieństiwe do IAM Policy pozwala nadawać uprawnienia Anonymous Principals (publiczne uprawnienia)
+- Definicja Resource Policy posiada dodatkowe pole `Principal` któro określa identities których dotyczy ta policy
+
