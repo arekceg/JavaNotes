@@ -1,4 +1,4 @@
-## ROUTE 53
+# ROUTE 53
 
 - Global service, single database
 -	Globally resilient
@@ -13,7 +13,7 @@
 3.	Komunikuje się z TLD zarządzającą odpowiednim rejestrem (.com, .org itd)
 4.	TLD dodaje do swojej strefy Name Server Records wskazujące na Name Servery R53
 
-### Rejestracja domeny
+## Rejestracja domeny
 1.	R53
 2.	Registered Domains
 3.	Register domain
@@ -25,4 +25,10 @@
 - R53 tworzy NameServery ale nic nie stoi na przeszkodzie żeby użyć Name Serverów zewnętrznych
 - Te Name Servery są rejestrowane w TLD i ich użyje DNS żeby odnaleźć naszą domenę
 
-
+## Konfiuracja routingu do bucektu S3
+Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla tego bucketu domenę.
+**Bucket musi mieć DNS name takie jak domena**
+1.	R53 -> Hosted zones -> wybrać jakąś zonę
+2.	Create Record -> Simple Routing -> Define Simple Record
+	-	Record Type: A
+	-	Value/Route traffic to: Alias to S3 Website Endpoint
