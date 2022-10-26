@@ -108,7 +108,7 @@ Dodaje:
 - Dzięki nim można znaleźc serwer mailowy danej domeny (SMTP)
 - Każdy rekord ma Priority i Adres
 	- Im niższa cyfra `Priority` ten adres będzie użyty najpierw
-	- Jeżeli adres ma `.` na końcy to znaczy że jest to konkretny adres domeny
+	- Jeżeli adres ma kropke `.` na końcy to znaczy że jest to konkretny adres domeny
 	- Jeżeli nie ma to jest częścią głownej domeny
 	-	np dla domeny `foo.com`:
 		`mail.incoming` oznacza adres `mail.incoming.foo.com`
