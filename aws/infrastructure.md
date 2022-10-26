@@ -1,6 +1,6 @@
-## Infrastructure
+# Infrastructure
 
-### Public vs Private Services
+## Public vs Private Services
 - Public i Private odnoszą się stricte do networkingu
 	-	Public serwisy mogą być dostępne z zewnątrz, np. wystawiając endpoint
 	- Private serwisy istnieją jedynie w VPC (Virtual Private Cloud)
@@ -11,16 +11,16 @@
 - Strefa public też istnieje w seci AWS, nie jest hostowana bezpośrednio w publicznym Internecie, może jedynie wystawiać publiczne endpointy
 - Nawet jeżeli użyjemy gatewaya do skomunikowania np. S3 (public) z EC2 (private) to komunikacja między nimi dzieje się wewnątrz AWS, traffic nie dotyka w ogóle publicznego internetu
 
-## Global Infrastructure
-### AWS Region
+# Global Infrastructure
+## AWS Region
 -	Miejsce gdzie jest hostowana infrastruktura AWS
 - Każdy region jest niezależny od innego, więc np. problemy z datacenter w jednym regionie nie będą się propagować na inny
 
-### AWS Edge Location
+## AWS Edge Location
 - Znacznie mniejsze niż Region, ale jest ich więcej
 - Najczęściej służa do przechowywania kontentu
 
-### Awailibility Zones AZ
+## Awailibility Zones AZ
 - Podstrefy wewnątz regionu, np.
 	- region Sydney to `ap-southeast-2`
 	- ten region ma AZ:
@@ -29,20 +29,20 @@
 		-	ap-southeast-2c
 - Możemy skonfigurować że chcemy 6 serwerów, po 2 w każdym AZ - dzięki temu jak w regionie padnie datacenter to mamy zapasowe 4 serwry
 
-### Service Resilience
-#### Globally Resilient
+## Service Resilience
+### Globally Resilient
 -	Serwis który istnieje __jeden__ na całą infrastrukturę
 - Dane przez niego używane są klonowane do wszystkich regionów
 - Dla takich serwisów nie możemy wybrać regionu, region to `Global`
 - np. IAM
 
-#### Region resilient
+### Region resilient
 - Serwisy które istnieją w kontekście jednego regionu
 
-#### AZ Resilient
+### AZ Resilient
 - Serwisy które istenieją w konteście jednego AZ
 
-### ARN
+## ARN
 - Amazon Resource Name
 - __Unikalny__ identyfikator zasobu AWS w formacie:
 	`arn:partition:service:region:account-id:resource`
@@ -53,12 +53,12 @@
 	`arn:aws:s3:::foo/*`
 	- w tym wypadku odnosimy się do wszystkiego w buckecie `foo` ale nie do __samego__ bucketu `foo`
 
-### **EXAM** Shared Responsibility Model
+## **EXAM** Shared Responsibility Model
 
 - AWS jest odpowiedzialny za bezpieczeństwo chmury
 - Klient jest odpowiedzialny za bezpieczeństwo __w__ chmurze
 
-### High Availibilty
+## High Availibilty
 - Aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period
 - Nie oznacza to systemu __non stop__ dostępnego który nigdy nie pada
 - Oznacza to system który jest __up__ tak często jak się da i który po padnięciu jest w stanie szybko się podnieść
@@ -69,11 +69,21 @@
 - Np w wypadku failu jednego serwera przełączamy sie na drugi serwer
 	- User może doświadczyć małej czkawki czy chwilowego przerwania dostaw usług i to jest ok
 
-### Fault-Tolerance
+## Fault-Tolerance
 - Property that enables a system to continue operating propertly in the event of the failure of some (one or more faults within) of its components
 - System projektujemy tak żeby przerwał usterki bez przerywania dostawy usług
 - HA się w tym mieści
 - Np. kiedy korzystamy z dwóch serwerów jednoczesnie to jak jeden padnie to bez zatknięcia możemy dalej używać drugiego bez konieczności przepinania się 
 
-### Disaster Recovery
+## Disaster Recovery
 - A set of policies, tools and procedures to enable the recovery or continuation of vital technology ifrastructure and systems following a natural or human-induces disaster
+
+## RPO Recovery Point Objective
+-	Maximum amount of data or time that _can_ be lost during a disaster recovery situation before that loss will **exceed** what the organisation can tolerate
+- RPO = 6h oznacza że biznes jest w stanie przełknąć stratę danych z ostatnich 6h
+Jak backupy są robione co 6h to przy wyjebce serwera minimalnie stracimy nic, a maksymalnie 6h danych. Więc jeżeli chcemy spełnić warunki RPO to backupy muszą się wykonywać częściej niż RPO
+
+## RTO Recovery Time Objective
+-	Maximum tolerable length of time that a system can be down after a failure or disaster occurs
+- Recovery time begins at the moment of failure and ends when the system is operational AND handed back to business
+
