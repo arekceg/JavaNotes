@@ -116,7 +116,7 @@
 - Mniej admin overhead
 
 ## 12. NACL Network Access Control List
-- Stateless Firewall dla subnetu
+- **Stateless** Firewall dla subnetu
 - Kontroluje dane inbound i outbound z subnetu
 - Nie kontroluje przepyłwu danych między zasobami subnetu
 - **EXAM** NACL pozwalają na explicit allow i explicit deny komunikac
@@ -126,3 +126,36 @@
 - **EXAM** NACLe nie wiedzą nic o logicznych zasobach AWS, tylko IP, CIDRY, porty i protokoły
 - **EXAM** NACL do zabraniania komunikacji, Security Group dla otwierania komunikacji
 - **EXAM** Każdy subnet ma jeden NACL, każdy NACL może mieć wiele subnetów
+
+## 13. Security Groups SG
+- **Statefull** jakby firewall
+- **EXAM** Nie pozwala na **explicic deny**, pozwala tylko na implicit deny i explicit allow. Nie można blokować dostępu dla konkretnych IP używając SG
+- **EXAM** SG operują na IP/CIDR ale też potrafią odnosić się do konkretnych logicznych zasobów AWS, innych SG albo nawet __samego siebie__. Referencowanie samego siebie pozwoli na komunikację między różnymi instancjami tej samej apki w ramach tej samej VPC
+- **EXAM** SG nie są podpięte bezpośrednio pod instacje zasobów logicznych, ani pod subnety, są podpięte pod ENI Elastic Network Interfaces. **SG są zawsze podpięte pod network interfaces**
+    - np. jak SG `FOO` ma allow zasadę z  `source` ustawionym na  SG `BAR` to wtedy wszystko co ma podpiętą SG `BAR` będzie mogło sie komunikować przez SG `FOO`
+
+## 14. NAT Network Address Translation, NAT Gateway
+- NAT służy podmienie adresów IP w pakietach danych 
+
+### 14.1. IP Masquerading
+- Przypisywanie prywatnemu zakresowi CIDR **jednego** publicznego adresu IP.
+- **Działa tylko dla outgoing komunikacji** 
+
+### 14.2. NAT Gateway
+- Pozwala na IP Masquaraing
+- **EXAM** NAT Gateway musi istniec w **publicznym subnecie** i mieć przydzielony publiczny adres IP
+- Instancje w prywatnym subnecie strzelają do NATG w publicznym subnecie i potem NATG strzela przez IGW do publicznego internetu
+- **EXAM** NAT Gateway jest **AZ resilient**
+    - **EXAM** Żeby NAT Gateway był region resilient to trzebaby stworzyć NATG w każdym AZ i dla każego prywatnego subentu w każdym AZ stworzyć Route Table kierujące na ten NATG
+- **EXAM** NAT Gateway używa Elastic IP
+- **EXAM** Przed NAT Gateway były NAT Instances działające na instancjach EC2. EC2 domyślnie blokuje traffic który jako source lub destination nie ma tego EC2. Żeby EC2 mogło działać jako NAT Instnace trzeba **wyłączyć Source/Destination Checks** 
+- **EXAM** W większości pytań egzaminowych NAT Gateway >> NAT Instance, ale NAT Instance może być tańszy 
+- **EXAM** Nie można podpiąć Security Group pod NAT Gateway, tylko NACL
+- Jak routujemy traffic na NATGW to route table musi mieć podpięte __wszystkie__ prywatne subnety danej AZ??
+
+### 14.3. NAT Instance
+- Instancj EC2 która robi NAT
+- **EXAM** NAT Instance jest normalną instancją EC2 więc może mieć przypisaną Security Group, być multitaskowana jako bastion czy używana do post forwardów, NAT Gateway nie. 
+
+### 14.4. IPv6 a NAT 
+- **EXAM** IPv6 nie wymaga NAT, wszystkie adresy IPv6 mogą być po prostu publiczne. Wystarczy zrobić route od `::/0` do IGW
