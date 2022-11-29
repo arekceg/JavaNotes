@@ -351,6 +351,25 @@ Ważne terminy:
     - Płacimy za całość z góry, nie płacimy nic za per/s
     - Największe discounty
 
+#### Scheduled Reserved
+- Mamy rezerwację capacity ale tylko na jakiś okreslony okres czasu
+- Troszkę taniej od Standard Reserved
+	- Trza kupić min. 1200h/rok i 1 rok min
+- Dobre to np:
+	- Batchowe przetwarzanie czegoś co wieczór przez 2h
+	- Cotygodniowe obczliaczeni i analiza wypłat
+
+#### Regional Reservation
+- Rezerwujemy miejsce w danym regionie, nie określając AZ
+- **EXAM** Regional Reservation nie rezerwuje capcity w konkretnym AZ, ma niższy priorytet w przydziale capacity niż Zonal Reservation
+
+#### Zonal Reservation
+- Rezerwacja w konkretnym AZ
+
+#### On-Demand Capacity Reservation
+- Rezerwacja miejsca w danym AZ, ale bez obniżki kosztów
+- Mamy pewność że zawsze będziemy mieć capacity i nie musimy podpisywać umowy na rok czy trzy, ale płacimy za to capacity tyle ile za normalne on-demand i to niezależnie od tego czy jest używane czy nie
+
 ## Dedicated Host
 - EC2 Host tylko dla mnie!
 - Płacimy za Host, nic za instancje
@@ -360,3 +379,13 @@ Ważne terminy:
 - Podobnie jak DH ale płacimy za instacje a nie za host
 - Też cały host dla nas
 - Wyższe opłaty
+
+# EC2 Savings Plan
+- 1 lub 3 letni commitment do AWS obejmujący jakąś ilość przepracowanych godzin przez nasze zasoby
+	- Deklaruje sie że przez 3 lata będę wydawał 20$/h za computowanie i dzięki temu mogę wytargowac lepsza cenę godzinową
+	- Jak przekoryczmy tę zadeklarowaną wartość to płacimy znowu cenę jak On-Demand
+- Sa dwa typy
+	- General Compute Savings Plan
+		- EC2, Lambda, Fargate
+	- EC2 Savings Plan
+- **EXAM** Jeżeli chcemy przenieść architekturę opartą na EC2 na rozkonteneryzowane, serwerlessowe EKSy czy Lambdy to warto rozważyć General Compute Savings Plan w celach oszczędności
