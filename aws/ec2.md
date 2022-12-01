@@ -389,3 +389,54 @@ Ważne terminy:
 		- EC2, Lambda, Fargate
 	- EC2 Savings Plan
 - **EXAM** Jeżeli chcemy przenieść architekturę opartą na EC2 na rozkonteneryzowane, serwerlessowe EKSy czy Lambdy to warto rozważyć General Compute Savings Plan w celach oszczędności
+
+# Instance Status Checks
+1. Check:
+    - Problemy z Hostem
+    - Brak mocy, sieci, problem z softem lub hardem Hosta
+2. Check:
+    - Problem z Instancjami
+    - Zły config sieciowy instancji
+    - Problemy z kernelem
+    - Błędy w systemie plikow
+
+# Instance Recovery
+- Jezeli instancja sie wywali można ustawić automatyczne stawianie jej ponowie
+- **EXAM** A recovered EC2 instance is identical to the original instance, including the instance ID, private IP addresses, Elastic IP addresses, and all instance metadata. If the impaired instance has a public IPv4 address, the instance retains the public IPv4 address after recovery.
+- Nie działa na instacjach z Instace Storage
+- Działa tylko na niektórych typach isntacji
+
+# Termination protection
+- Można zabezpieczyć instancję przed terminacją
+- Prawą myską na instacji -> Instance Settings -> terminatoin protection
+- Żeby wyłączyć trzeba zmienić ustawienie `disableApiTermination`
+
+# Shutdown behaviour
+- Można zmienić co oznacza `Shutdown` instancji:
+    - Stop
+    _czy_
+    - Terminate
+
+# EC2 Vertical vs Horizontal scaling
+
+## Vertical
+- Skalowanie przez powiększanie instancji, a większa instancja jest droższa
+- Wymaga downtime żeby przełączyć się na większy typ
+- Maksymalny scaling definiowany przez największy typ instancji
+
+## Horizontal
+- Skalowanie przez dodawanie nowych instancji
+- Load balancer rozkłada każde zapytanie do instancji między wszystkei dostępne
+- Problem - jak zachowac sesję między różnymi instancjiami?
+    - externally hostes sessions
+    - np. statelss aplikacja
+- Bez downtime przy skalowaniu
+- Praktynie nielimitowany scaling
+- Często tańsze
+
+# Instance Metadata
+- EC2 service dostarcza Instancjom metadanych
+- **EXAM** **BARDZO WAŻNE** EC2 Instance Metadata jest dostępne dla każdej instancji na http://169.254.169.254/latest/meta-data
+- **EXAM** EC2 Instance Metadata servcie jest nieautentykowany i nie ma enkrypcji
+
+
