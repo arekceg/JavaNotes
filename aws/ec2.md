@@ -89,7 +89,7 @@ Podstawowe:
 1. RMB -> Terminate
 2. Pamiętać żeby usunąć też Security Group
 
-## Typy instancji EC2
+## **EXAM** Typy instancji EC2
 - https://aws.amazon.com/ec2/instance-types/
 - https://instances.vantage.sh/
 ### Nazwa typu instancji:
@@ -372,8 +372,14 @@ Ważne terminy:
 
 ## Dedicated Host
 - EC2 Host tylko dla mnie!
-- Płacimy za Host, nic za instancje
+- Może być On-Demand albo tak jak Reserved
+- Płacimy za Host, nie za instancje 
 - Host affinity: nawet po zatrzymaniu i odpaleniu instancji ponownie zostaje ona na tym samym hoście
+- Nie można:
+    - Używać Placement Groupd
+    - Hostować RDS
+    - Hostowac niektórych AMI - SUSE, RHEL, Windows
+- Mogą być współdzielone używając RAM Resource Access Manager, ale każde konto widzi tylko instancje stworzone przez siebie
 
 ## Dedicated Instances
 - Podobnie jak DH ale płacimy za instacje a nie za host
@@ -439,4 +445,84 @@ Ważne terminy:
 - **EXAM** **BARDZO WAŻNE** EC2 Instance Metadata jest dostępne dla każdej instancji na http://169.254.169.254/latest/meta-data
 - **EXAM** EC2 Instance Metadata servcie jest nieautentykowany i nie ma enkrypcji
 
+# EC2 Bootstraping
+- **EXAM** EC2 Bootstraping to automatyzacja **inicjalizacji** instancji. 
+- **EXAM** EC2 Boostraping Używa **EC2 User Data**. Ten sam IP co metadata, ale inny url: `http://169.254.169.254/latest/user-data`, max 16kb
+- EC2 service dostarcza EC2 User Data i EC2 to odpala nie walidując
+- **EXAM** EC2 User Data nie jest kodowany ani zabezpieczony, każdy z dostępem do OS może pobrac to user data
 
+## Boot-Time-To-Service-Time
+- Czas od odpalenia instancji do momentu pełnej sprawności 
+- **EXAM** Aby poprawić Boot-Time-To-Service-Time instancji EC2 najepiej połączyć AMI Baking i EC2 Bootstraping
+
+## cfn-init
+- `cfn-init` to skrypt który jest obceny w każdej instacnji EC2
+- Przy User Data definiujemy krok po kroku co ma być zrobione przy inicjalizacji instancji, `cfn-init` definiujemy __stan__ instancji na koniec inicjalizacji
+- Denifowane w specjalnym bloku każdego logicznego zasobu w CFN
+- `cfn-init` może śledzić zmiany w metadanych templatki i w razie zmian ponownie sie odpalić, User Data odpala się tylko raz
+
+## CreationPolicy
+- `CreationPolicy` to częsc templatki CFN, podpięta pod konkretny zasób
+- Zazwyczaj CF twierdzi że instancja powstała poprawnie nawet jak się wypierdoli inicjalizacja configu.
+- Używając `cfn-singal` i `CreationPolicy` możemy sprawić że instacja będzie na zielono dopiero jak cały config przejdzie ok
+
+# EC2 Instance Role
+- IAM Rola która pozwala aplikacjom z EC2 pracować z serwisami AWS
+- Nadajemy instancji EC2 `Instance Pofile` o nazwie takiej samej jak rola którą chcemy nadać
+    - `Instance Profile` to wrapper na IAM Role którą ma mieć instancja EC2
+- Temp kredki uzyskane przez przyjęcie roli sa przekazywane do apki przez `meta-data` instancji
+    - `iam/security-credentials/{role-name}`
+    - te kredki są automatycznie odświeżane w metadata 
+- Tych kredek automatycznie używa CLI awsowe wewnątrz instancji EC2:
+    https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-precedence
+
+# SSM (Systems Manager) Parameter Store
+- Przechowalnie konfigów i secretów dla EC2
+- Public service
+- PS może przechowywać informacje w formie:
+    - String
+    - StringList
+    - SecureString
+- PS obsługuje proste przechowywanie jak również hierarhiczne np:
+    `/foo/bar-secret1`
+    `/foo/bar-secret22`
+    i potem jak weźmiemy parametry z `/foo/` to doastaniemy i `bar1` i `bar2`
+- PS integruje się z IAM w sprawie permissions
+- KMS może służyć do kodowania przechowywanych parametrów
+- Jest versioning
+
+# EC2 Placement Groups
+- Można określić jak nasze EC2 mają zajmować fizyczny hardware
+
+1. Cluster
+    - instancje trzymają się fizycznie blisko siebie
+    - najlepszy performans - 10Gbps
+    - **EXAM** Cluster Placement Group zajmuje pojedyncza AZ - ta AZ gdzie postawimy pierwszą instację, ta AZ będzie powiązana z Placement Group
+    - Najlepeij odpalać wszystki instancje na raz
+    - Use case: performacne, high speed, low latency
+2. Spread
+    - instancje są oddalone od siebie fizycznie 
+        - każda instancja stoi na innym racku
+    - zajmują wiele AZ
+        - max. 7 instancj / AZ
+    - High resilience, high avilibltiy 
+    - Use Case: mała ilośc krytycznych instancji które muszą być odseparowane od siebie w razie awarii
+3. Partition
+    - grupy instancji, oddalone od siebie
+    - wiele AZ
+        - max. 7 inst / AZ
+    - każda partycja ma swój rack 
+    - każda partycja ma wiele instancji
+        - możemy wybrać w której partition ląduje instancja albo może być umieszczana z automatu
+    - use case: wielkie równolegle działające systemy, _topology aware applications_
+
+# Enchanced Networking
+- Używ SR-IOV - karta sieciowa hosta jest świadoma wirtualizacji
+- Wiele "wirtualnych" logical cards które są używane przez instancje na hoście
+- Zużywa mniej CPU, pozwala na wiecej I/O, większy Bandwidth
+
+# EBS Optimized
+- Instancja posiada capacity specjalnie dedykowane I/O EBS
+- Lepszy performans EBS bo obsługa EBS jest na tym dedykowanym capacity i nie spowalania instancji 
+- Wspiera więszość instancji i jest włączone **by default**
+    - na starszych instancjach można włączyć ale kosztuje 
