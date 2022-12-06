@@ -46,3 +46,43 @@ Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla t
 - Połączone z konkretnymi VPC i dostępne tylko dla tych VPC
 - `Split-view` - można mieć dwie hosted zony, jedną private, jedną public, o tej samej nazwie
 	- Wtedy private zone może mieć więcej np. sensitive informacji, a public zone będzie jej podzbiorem, zawierającym tylko publicznie dostępne informacje
+
+------------------------
+***NA SAM DÓŁ***
+
+## Multi Value Routing
+- Można przypisać wiele wartości do jednego rekordu, każda na inny IP
+- !! Można przypisać oddzielny healthcheck do każdego rekordu
+	- Query zwróci max. 8 losowo wybranych rekordów które są _healthy_ i user wybierze z nich jeden losowo
+
+## Weighted Routing
+- **EXAM** Weighter Routing można użyć jako prosty load balancing lub do testowania nowych wersji aplikacji
+- Można podpiąć wiele rekordów pod jedną domenę i nadać każdemu _wagę_
+	- waga 0 = rekord nigdy nie jest wybierany
+- waga/suma_wag = pradopodobieństwo wyboru rekordu
+- Jezeli rekord jest unhealthy - wybierz następny
+
+## Latency-Based Routing
+- **EXAM** Użyć Latency-Based Routing kiedy potrzebna jest optymalizacja pod względem performance i user experience
+- Rekord przechowuje tez informacje o regionie
+	- 1 rekord o danej nazwie / region
+- AWS przechowuje informacje o latencji z różnych miejsc do róznch regionów i wybiera taki rekord żeby klient miał najmniejszą latencję
+	- więc nie jest to live latency, tylko statystyczna latencja przechowywana przez AWS
+- Też obsługuje healthcheki 
+
+## Geolocation Routing
+- Podobne do latency
+- Rekordy konfiguruje się dodatkowo podając państwo, kontynen, ISO kod państwa itp
+- Rekord wybrany na podstawie (w kolejności):
+	1. Stanu (USA)
+	2. Kraju
+	3. Kontynentu
+	4. Default rekord (opcjonalnie)
+		5. _NO ANSWER_
+- **EXAM** Geolocation Routing może być użyte do regional restrictions, language specific content lub do loadbalancingu pomiędzy regionalnymi endpointami
+
+## Geoproximity Routing
+- Rekordy fizycznie najbliżej klienta 
+	- Odlegość fizyczna + `Bias` 
+	- Bias można ustawić na `+` lub `-` dla każdego regionu i to zmienia efektywy rozmiar tego regionu przy wybiorze rekordu
+- Rekordy taguje się regionem AWS lub lat/lang
