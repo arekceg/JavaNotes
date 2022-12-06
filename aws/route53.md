@@ -33,6 +33,7 @@ Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla t
 	-	Record Type: A
 	-	Value/Route traffic to: Alias to S3 Website Endpoint
 
+<<<<<<< HEAD
 # Public Hosted Zones
 - DNS Database (zone file) hosted by R53(Public Name Servers)
 - Hostowana na 4 name serverach
@@ -47,8 +48,48 @@ Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla t
 - `Split-view` - można mieć dwie hosted zony, jedną private, jedną public, o tej samej nazwie
 	- Wtedy private zone może mieć więcej np. sensitive informacji, a public zone będzie jej podzbiorem, zawierającym tylko publicznie dostępne informacje
 
-------------------------
-***NA SAM DÓŁ***
+# CNAME vs ALIAS
+- CNAME służy do mapowania nazwy domeny na inną nazwę domeny
+    np. `www.foo.com` -> `foo.com`
+
+## Problem
+- CNAME nie może mapować z "gołych" (apex) domen (bez `www.`), czyli:
+    nie da sie zmapować `foo.com` na `bar.com`
+- Elastic Load Balancer daje nam adres DNS a nie IP, więc nie możemy użyć CNAME żeby nakierować tam ruch np. z `foo.com`
+
+## Rozwiązanie
+- ALIAS record
+- Mapuje domenę na zasób AWS
+- **Nie jest częścią czystego DNS, to funkcja AWSowa**
+- **EXAM** ALIAS może być użyty i dla normalnych i apex domen (z i bez `www.`)
+- **EXAM** Jak mam nakierować DNS na zasób AWS to domyślnie wybrać ALIAS record
+- Darmowe!
+- **EXAM** ALIAS jest podtypem rekordu `A` lub `CNAME`. Używając ALIAS nalezy wybrać taki typ na jaki wskazujemy ALIASem. np. ELB wystawia nam rekord A (domena wskazująca na IP) więc mamy użyć ALIAS A
+
+
+# Health Checks
+- Health Checki są częscią R53 ale można ich używać do czekowania każdego publicznego IP
+- HC są rozproszonymi, globalnymi procesami, trzeba mi dać dostęp do IP
+- default co 30s, co 10s za $$$
+- Typy:
+    - Endpoint
+    - state of CloudWatch Alarm
+    - Checks of Checks
+
+# Typy routingu: 
+
+## Simple Routing
+- typ rekordu: `A` 
+- AWS dopuszcza 1 rekord per nazwę domeny
+- Każdy rekord może wskazywać na wiele adresów IP
+- **NIE WSPIERA HEALTHCZEKÓW**
+- **EXAM** Simple Routing w R53 używa się kiedy chcemy przesłać traffic do jednego serwisu, np serwera webowego
+
+## Failover Routing
+- 2 nazwy domen per rekord
+    1. Primary
+    2. Secondary
+- Jak HealthCheck primary jest `unhealthy` to przekierowuj traffic na secondary
 
 ## Multi Value Routing
 - Można przypisać wiele wartości do jednego rekordu, każda na inny IP
@@ -86,3 +127,4 @@ Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla t
 	- Odlegość fizyczna + `Bias` 
 	- Bias można ustawić na `+` lub `-` dla każdego regionu i to zmienia efektywy rozmiar tego regionu przy wybiorze rekordu
 - Rekordy taguje się regionem AWS lub lat/lang
+
