@@ -128,3 +128,17 @@ Jeżeli hostujemy static website w S3 to możemy uzyć R53 żeby stworzyć dla t
 	- Bias można ustawić na `+` lub `-` dla każdego regionu i to zmienia efektywy rozmiar tego regionu przy wybiorze rekordu
 - Rekordy taguje się regionem AWS lub lat/lang
 
+# Route53 Interoperability
+- Używanie R53 z domeną zarejestrowaną lub hostowaną gdzie indziej
+- Domanin Registrar i Domain Hosting to **dwie różne** funkcje R53!
+
+1. R53 hostuje nameservery, domenę rejestrujemy gdzie indziej, nakierowujemy na nasze NS
+2. R53 rejestruje domenę, nameservery mamy postawione zewnętrznie
+
+# DNSSEC w Route53
+- **EXAM** R53 DNSSEC używa KMS do stworzenia pary asym kluczy z ktorych potem tworzony jest public i private KSK (Key Signing Key). **TE KLUCZE MUSZĄ BYĆ W US-EAST-1**
+- **EXAM** R53 DNSSEC tworzy i rotuje ZSK (Zone Signing Key) internalowo, bez użycia KMS
+- DS - Delegated Signer to hash publicznej części KSK i służy do sprawdzenia czy się nie zmieniła
+- **EXAM** Używając R53 DNSSEC trzeba stworzyć alarmy CloudWatch: `DNSSECInternalFailure` i `DNSSECKeySigningKeysNeedingAction`
+- **EXAM** DNSSEC Validation może być włączone dla konkrentego VPC 
+
