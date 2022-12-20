@@ -30,11 +30,24 @@
 
 ## V2:
 1. ALB Application Load Balancer
+	- Layer 7 Load Balancer
 	- Wspiera HTTP/HTTPS/WebSocket
 	- Jeden LB może zarządząć kilkoma aplikacjami
 		- w ramach Listener Configuration konfigurujemy SSL i hosta dla danego requestu 
+	- **EXAM** ALB nie potrafi utrzymywać enkrypcji SSL od klienta aż do apki. Połączenie SSL z klientem jest zrywane i nowe połączenie jest tworzone od ALB do apki
+	- **EXAM** ALB są wolniiejsze niż NLB bo jest więcej networkingowych rzeczy do załatwienia
+	- **EXAM** ALB przez to że jest L7 może odpytać aplikację o jej zdrowie
+	- Rules zarządzają komunikacją która przechodzi przez ALB. Są procesowane wg. ustawionego priorytetu
 2. NLB Network Load Balancer
 	- TCP/TLS/UDP
+	- Layer 4 Load Balancer TCP/TLS/UDP itd
+	- Nie jest świadomy headerów, kukisów, sesji, HTTP/HTTPS
+	- **EXAM** NLB są bardzo bardzo szybkie
+	- **EXAM** Do load balancowania połączeń nie HTTP/HTTPS dobrze jest defaultować NLB
+	- **EXAM** NLB mogą mieć przydzielony statyczny IP - przydatne do whitelistowania
+	- **EXAM** NLB przekazują TCP prosto do apki, nie przerywaja enkrypcji 
+	- **EXAM** NLB używają private link i mogą byc używane przez inne VPC
+
 
 ## Architektura ELB
 - Albo tylko IPv4 albo `double stack` - IPv4 i 6 
@@ -56,4 +69,84 @@
 - Kiedyś Nody LB mogły przekazywać traffic tylko do instnacji w swojej AZ
 - Dzięki CZLB każdy node może przekazać traffic do instancji w dowolnym AZ
 
-## 
+# Auto Scaling Groups
+- Używa Launch Templates / Launch Configurations żeby automatycznie skalować EC2 podnosząc nowe instancje
+- Min : Desired : Max (np. 1:2:4)
+- ASG są połączone z VPC i subnetami wewnątrz tej VPC
+- Instancje startowane przez ASG są w miarę możliwości rozłożnoe po równo między AZ
+- **EXAM** Auto Scaling Groups Self Healing - kiedy padnie jedna instacja ASG może to wykryć i postawić następną
+- **EXAM** Auto Sclaing Groups są darmowe - płacimy tylko za stworzone zasoby
+- **EXAM** Przy ASG warto używać cooldownów żeby zapobiec gwałtownemu tworzeniu/terminacji instancji
+- **EXAM** Lepiej miec więcej małych instancji niż mało duzych - bardziej cost-effective
+- **EXAM** ASG + Load Balancer tworzą elasticity i abstraktują cały proces od klienta
+
+## Scaling Policies
+1. Manual
+	- Ręczne ustawianie `desired`
+	- Dobre do testów / urgent sytiacji
+2. Scheduled
+	- Skalowanie zaplanowane
+3. Dynamic 
+	3.1. Simple 
+		- Scale up rule
+		- Scale in rule
+		- Rule oparte na metrykach 
+	3.2. Stepper
+		- Skalowanie na podstawie odhyłki metryk od normy
+	3.3. Target Tracking
+		- Definiujemy konkretną żądaną wartość metryki 
+	3.4. Scaling based on SQS
+		- ApproximateNumberOfMessagesVisible
+		- Skalowanie konsumentów kolejki jak dużo msg
+4. Cooldown Period
+	- Jak długo czekać po skalowaniu na nastepne
+
+- ASG nie potrzebują SP, moga mieć statycznie ustawione min:desired:max
+
+## Scaling Processes
+- Procesy  którymi można dokonfigurowywać ASG
+- Nie ma sensu przepisywac wszsytkiego:
+https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-suspend-resume-processes.html
+
+## ASG + Load Balancers
+- Instancje ASG są automatycznie dodawane i usuwane z Target Group LB 
+- ASG może użyć healthczeków Load Balancera (ALB ma zaawansowane healthczeki po HTTP/S) zamiast prostych hc EC2 - *Application Awarnes*
+
+## ASH Lifecycle Hooks
+- Customowe akcje które moga sie odpalać przy odpalaniu lub terminacji instancji 
+- Przerywa proces skalowania, wykonuje akcje, resumuj skalowanie (woła CompleteLifecycleAction)
+	- A jak będzie timeout (default 3600sec) to robi CONTINUE albo ABANDON
+- Da się spiąć z EventBridge albo SNS
+
+## ASG Health Checks 
+1. EC2 (default)
+	- Na bazie statusu intnacji EC2
+2. ELB 
+	- na bazie _aplication aware_ health czeków po HTTP/S
+3. Custom	
+	- kustomowy healthczek 
+
+- **EXAM** ASG Health Check Grace Period (def. 300s) - opóźnienie zanim zaczniemy sprawdząc healthczkea znowu (np. na ładowanie systemu, start apki)
+
+# SSL Offload 
+
+Typy utrzymania secure connection przez ELB:
+
+## Bridging
+- Terminacja SSL w ELB, utworznie nowego połączenia SSL od ELB do instancji
+- ELB musi przechowywać certyfikat SSL, kiepsko z punktu widzenia security
+- Load Balancer widzi zawartosc HTTP i może podejmowac decyzje na tego bazie (ALB)
+
+## Pass-through
+- Load Balancer (NLB) po prostu przekazuje połącznie SSL prosto do instancji
+- Nasłuchuje na TCP a nie HTTP!
+
+## Offload
+- Podobnie jak Bridging, **ale** po terminacji SSL dane nie są już kodowane! Od ELB do instancji dane lecą po HTTP
+- Lepszy performans niż Bridging bo instancje nie musze rozkodowywać danych 
+
+# Connection Stickiness
+- Jezeli mamy stateful serwery to jak load balancer przerzuca traficc między instancją a instancją to klient traci dane i sesję
+- W LB można włączyć `Session Stickiness`
+	- Przy pierwszym kontakcie z LB LB generuje dla klienta cookie `AWSALB` duration 1s -> 7days
+	- Minus - klient obciąża tylko jeden serwer cały czas (a klient może być wymagający)

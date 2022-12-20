@@ -526,3 +526,10 @@ Ważne terminy:
 - Lepszy performans EBS bo obsługa EBS jest na tym dedykowanym capacity i nie spowalania instancji 
 - Wspiera więszość instancji i jest włączone **by default**
     - na starszych instancjach można włączyć ale kosztuje 
+
+# Launch Configuration / Launch Template
+- Blueprinty do tworzenia nowych instancji EC2
+- Mozna okeślać w nich wiele różnych konfiguracji
+- **EXAM** Launch Configuration i Launch Template nie można edytować! LT ma wersje, ale nie można edytoać ich po stworzeniu
+- LC i LT są Uzywane dla Auto Scaling Groups do tworzenia nowych instancji
+- LT są mogą być użyte też do tworzenia po prostu nowych instancji EC2 przez UI/CLI
