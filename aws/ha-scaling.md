@@ -147,6 +147,30 @@ Typy utrzymania secure connection przez ELB:
 
 # Connection Stickiness
 - Jezeli mamy stateful serwery to jak load balancer przerzuca traficc między instancją a instancją to klient traci dane i sesję
-- W LB można włączyć `Session Stickiness`
+- W Target Group Load Balancera (Zakładka Attributes -> Edit)  można włączyć `Session Stickiness`
 	- Przy pierwszym kontakcie z LB LB generuje dla klienta cookie `AWSALB` duration 1s -> 7days
 	- Minus - klient obciąża tylko jeden serwer cały czas (a klient może być wymagający)
+
+# Gateway Load Balancer (GWLB)
+- Skalowanie 3rd party security appliances
+- `Inbound and outbount *transparent* traffic inspection or protection`
+- Przepuszcza traffic do aplikacji security 
+- Składowe:
+	1. GWLB Endpoints 
+		- wpuszczają/wypuszczają traffic
+		- ingress route table w IGW przepuszcza traffic do tych endpointów   
+	2. GWLB 
+		- właściwy load balancing
+	3. Protokół `GENEVE`
+		- Protokół tunelowania pakietów 
+
+- Traffic leci do endpointów,
+- potem do LB, 
+- LB wysyła do security apps, 
+- validacja, 
+- traffic wraca do LB, 
+- do Endpointów
+- jest wysyłany do docelowgo celu
+	
+
+
