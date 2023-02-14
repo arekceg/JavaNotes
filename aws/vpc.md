@@ -159,3 +159,50 @@
 
 ### 14.4. IPv6 a NAT 
 - **EXAM** IPv6 nie wymaga NAT, wszystkie adresy IPv6 mogą być po prostu publiczne. Wystarczy zrobić route od `::/0` do IGW
+
+# VPC Flow Logs
+- Przechwytują metadane pakietów (source IP, dest IP itp) dla połączeń:
+	- ACCEPTED
+	- REJECTED
+	- ALL
+- Monitory można zapiąć na:
+	- VPC
+	- Subnet
+	- pojedyncze ENI
+- Nie są realtime!
+
+# Egress-Only Internet Gateway
+- NAT zapewnia outbound-only dla IPv4
+- IPv6 domyślanie w AWS są publiczne in-and-out
+- Egress-Only zapewnia outbound-only traffic dla IPv6
+- Architektonicznie tak samo jak przy IGW
+	- HA by default across all AZs
+	- Istenieje zapięty na VPC
+
+# VPC Endpoints
+
+## VPC Gateway Endpoints
+- Privade access to S3 or DynamoDB
+- Pozwala private service albo service wewnątrz private-only VPC na komunikację z S3 lub DynamoDB
+- Dzięki niemu prywatny zasób ma dostęp do publiczne serwisu np. S3 ale nie ma dostępu do reszty publicznego internetu
+- Tworzy sie per-service per-region
+- **EXAM** VPC Gateway Endpoint jest HA na wszystkich AZ w danym regionie, nie przypisujemy go do konkretnego subnetu, przypisujemy do VPC i wybieramy które subnety ma obsługiwać
+- Endpoint policy określa do czego gateway ma dostęp
+- **EXAM** VPC Gateway Endpoint jest accesible jedynie z VPC do którego został przypisany
+- **EXAM** Endpoint Policy służy do definiowania zachowania Gateway i Interface Endpointów
+- **EXAM** Gateway Endpoints używają prefix list i route tables do zarządzania trafficiem
+
+## VPC Interface Endpoints
+- Provide private access to AWS Public Services
+- **EXAM** VPC Interface Endpoints sa dodawane do konkretnego Elastic Network Inteface w danym subnecie wewnątrz VPC, nie są HA by default
+- Interface Endpoints używają tylko TCP lub IPv4
+- Uzywają **PrivateLink**
+- **EXAM** Private DNS pozwala nadpisać defaultowy URL serwisu tak żeby wskazywał na prytwany IP naszego Interface Endpointu
+
+# VPC Peering
+- **EXAM** VPS Perring to direct encrypted link between **two VPCs**
+- możliwośc Cross-region + cross-account
+- Jak mamy peering w tym samym regionie go przy konfiguracji SG możemy się odwołać bezpośrednio do SG drugiego VPC
+- **EXAM** VPC Peering nie jest _transitive_ czyli nie można ich chainować. VPC A -> VBC B -> VBC C nie oznacza połączenia VPC A -> VPC C
+- Po obu stronach Peera trzeba odpowiednio skonfigurować routing
+- **EXAM** VPC Peering nie może być użyte kiedy mamy konflikt w CIDR dwóch VPC
