@@ -78,6 +78,10 @@ Pobierze informacje o AZ z instacji EC2
 - Denifowane w specjalnym bloku każdego logicznego zasobu w CFN
 - `cfn-init` może śledzić zmiany w metadanych templatki i w razie zmian ponownie sie odpalić, User Data odpala się tylko raz
 
+# cfn-hup
+- daemon który obserwuje zmiany w metadanych zasobu
+- cnf-init odpala sie tylko _raz_, cfn-hup można użyć żeby jeszcze raz odpalić skrypty inicjalizacyjne w momencie zmianu metadanych instancji (np. kiedy robimy UpdateStack)
+
 # CreationPolicy
 - `CreationPolicy` to częsc templatki CFN, podpięta pod konkretny zasób
 - Zazwyczaj CF twierdzi że instancja powstała poprawnie nawet jak się wypierdoli inicjalizacja configu.
@@ -102,3 +106,43 @@ Pobierze informacje o AZ z instacji EC2
 - Root Stack: początkowy stack 
 - Parent Stack: każdy stack który ma pod sobą kolejne nested stacki 
 - Nested Stack używa sie jako Resource `AWS::CloudFormation::Stack`
+- **EXAM** Templatki CF możemy gdzieś uploadować i potem używać ich przy nestowaniu templatek
+- Nestując stacki nie referencujemy **konkretnego** stacku, tylko jest tworzony nowy używając zreferencowanej templatki
+- **EXAM** Nested stacks are usen when stacks _form part of one solution_ **lifecycle linked**
+- **EXAM** Nested stacks są używane żeby przekraczać limit 500 resurców na jeden stack 
+
+# Cross-Stack Reference 
+- **EXAM** Outputy stacków mogą być _exportowane_ i dzięki temu widoczne dla innych stacków
+- **EXAM** Exportowane outputy stacków CF muszą być unikalne per konto per region
+- **EXAM** Używamy funkcji `Fn::ImportValue` żeby importować exportowane outputy stacków CF
+- **EXAM** Cross-Stack KEYWORDS **Service-Orientated** **different lifecycles** **STACK reuse**
+
+# StackSets
+- Pozwalają na deployowanie stacków CF w wielu kontach i regionach jednocześnie
+- StackSet jest tworzony w `admin account` i potem stacki są tworzone w `target accounts`
+- Agregaty na `stack instances`. Stack instance to referencja do jednej instancji stacku. Nawet jeżeli stack sie nie stworzyl to stack instance się tworzy i przechowuje info czemu stack się nie stworzył 
+- CF przyjmuje IAM Role żeby móc tworzyć zasoby w innych kontach
+	- Self-managed role lub Service-Managed role (AWS Organizations)
+- **EXAM** Concurrent Accounts - przy StackSetach CF określami ile kont jednocześnie może generować stacki 
+- **EXAM** Failure Tolerance - ilość poszczególnych stacków które mogą się wysypać żeby wysypać cały StackSet sie wysypał 
+- **EXAM** Retain Stacks - defaultowo usuwanie Stack Intances ze StackSet usuwa też konkretne stacki, ale można ustwaić żeby nie usuwało
+
+# DeletionPolicy
+- Delete
+	- CF usuwa phys resource jeżeli logical resource jest usunięty
+- Retain
+	- CF nie usuwa phys resource jeżeli logical resource jest usunięty
+- Snapshot
+	- CF zrob snapshot pamięci zasobu przed usunięciem
+	- Snapshot jest dostępny tylko na wybranych zaosób (np. RDS, EBS **nie dla EC2**)
+
+# Stack Roles
+- **EXAM** CloudFormation domyślnie do tworzenia zasobów uzywa permissions identity która triggeruje tworzenie stacka. 
+- **EXAM** Dzięki Stack Roles możemy konkretnie ustalić jaką rolę ma przybrać CF do tworzenia zasobów. Dzięki temu identity wywołująca tworzenie stacku nie musi mieć uprawnień do tworzenia zasobów
+
+# Change Sets
+- Pozwalają zrobić podgląd skutków zmian które wprowadzamy do stacka i zdecydować czy chcemy ja wprowadzić
+
+# Custom Resources
+- **EXAM** CF Custom Resources pozwalają na integrację CF z rzeczami których nie wspiera natywnie
+- **EXAM** CF Custom Resources wysyła dane na konkretny endpoint (Lambda lub SNS Topic) i może dostać respons na wystawiany przez siebie ResponseURL
