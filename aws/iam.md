@@ -210,7 +210,7 @@ Jeżeli User ma jakieś Policy, jest w grupie która ma Policy i próbuje uzyska
 ### AWS Managed Policy
 - **EXAM** Customer Managed Policy to każda IAM Policy która jest tworzona przez AWS
 
-### Service Control Policy
+### Service Control Policy SCP
 - Specjalny tym IAM Policy któro jest nadawane częsciom IAM Organization
 - Może być nadane organization-wide, per Organization Unit lub nawet per konto w organizacji
 	-	Propaguje się wgłąb organizacji, tzn jeżeli OU któremu nadajemy SCP ma w sobie pomniejsze OU to SCP odniesie się do nich też

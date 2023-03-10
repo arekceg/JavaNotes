@@ -1,0 +1,19 @@
+# Exam notes
+
+- Cloudwatch/Cloudtrail
+- ALB / ELB
+- t3 EC2 memory utilization
+- One ZOne Infrequent Access
+- Monitorowanie EBS IO1, ST1
+- EBS GP2?
+- S3 Transfer Acceleration
+- EC2 dostęp do S3 - bucket policy czy instance policy?
+- dostęp do S3 dla IAM Userów z zewnętrznego konta
+	- IAM role in your account??
+- EC2 monitoring, roles for CloudWatch
+- ephemeral storage EC2
+- egress-only igw
+- EC2 pricing
+	- spot, on-demand itd
+- EBS Snapshot (incremental?)
+- FIPS 140-2 Level 3
