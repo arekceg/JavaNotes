@@ -1,6 +1,8 @@
 # Exam notes
 
 - Cloudwatch/Cloudtrail
+	- Cloudwatch - logi
+	- Cloudtrail - eventy dotyczące zasobów
 - ALB / ELB
 - t3 EC2 memory utilization
 - One ZOne Infrequent Access
