@@ -1,0 +1,33 @@
+#red {
+    border: 10px solid black ;
+    border-width: 5px 2px;
+    /* padding: 10px; */
+    padding-left: 50px;
+    
+    width: 100px;
+    color:red;
+}
+
+#green {
+    color: green;
+}
+
+#yellow {
+    color: yellow;
+}
+#orange {
+    color: orange;
+}
+#blue {
+    color: blue;
+    font-weight: 100;
+}
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+* {
+    font-family: 'Times New Roman', Times, serif
+}
