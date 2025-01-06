@@ -1,0 +1,36 @@
+* {
+    background-color: black;
+}
+
+.poster {
+    width: 50%;
+    margin-left: 25%;
+    text-align: center;
+    padding-top: 10%;
+}
+
+.image {
+    width: 100%;
+    /* Ensure the image spans the poster width */
+    border: 5px solid white;
+}
+
+p {
+    color: white;
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+}
+
+.top {
+    font-size: 30pt;
+    margin-top: 10px;
+    /* Add spacing above the top text */
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.bottom {
+    font-size: 15pt;
+    margin-top: 10px;
+    /* Add spacing below the bottom text */
+}

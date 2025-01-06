@@ -1,0 +1,94 @@
+.gradient-background {
+  background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
+  background-size: 180% 180%;
+  animation: gradient-animation 18s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.tech {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+
+}
+
+.tech-img {
+  height: 30px;
+}
+
+.icon-square {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+}
+
+.profile-img {
+  height: 100px;
+  border-radius: 50%;
+}
+
+
+.btn-outline-secondary-custom {
+  border-color: white;
+  color: white;
+}
+
+.btn-primary-custom {
+  border-color: black;
+  background-color: black;
+  color: white;
+}
+
+.btn-primary-custom:hover {
+  border-color: gray;
+  background-color: grey;
+  color: white;
+}
+
+.btn-outline-primary-custom {
+  border-color: black;
+  background-color: white;
+  color: black;
+}
+
+.btn-outline-primary-custom:hover {
+  border-color: black;
+  background-color: black;
+  color: white;
+}
+
+.btn-outline-secondary-custom:hover {
+  border-color: white;
+  background-color: white;
+  color: black;
+}
+
+.btn-outline-secondary-custom svg {
+  fill: white;
+}
+
+.btn-outline-secondary-custom:hover svg {
+  fill: black;
+}
+
+.border-primary-custom {
+  border: 1px solid black;
+}
+
+.text-bg-primary-custom {
+  background-color: black;
+}

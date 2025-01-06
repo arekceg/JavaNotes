@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mondrian Project</title>
+    <style>
+      /* 
+    Write your CSS here 
+    Gap Colour: #000
+    White: #F0F1EC
+    Red: #E72F24
+    Black: #232629
+    Blue: #004592
+    Yellow: #F9D01E
+
+    For dimensions, see dimensions.png image.
+    HINT: Remember you can't change the properties of grid lines.
+    But grid lines are transparent!
+    */
+      html,
+      body {
+        height: 100vh;
+      }
+      .flex-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .grid {
+        display: grid;
+        background-color: black;
+        width: 748px;
+        height: 748px;
+        gap: 10px;
+        grid-template-columns: 325px 208px 155px 30px;
+        grid-template-rows: 398px 140px 155px 25px;
+      }
+
+      .cell {
+        background-color: whitesmoke;
+      }
+
+      #A1 {
+        background-color: red;
+      }
+
+      #A2 {
+        grid-column: span 3;
+      }
+      #B1 {
+        grid-row: span 2;
+      }
+      #B2 {
+        grid-row: span 2;
+        grid-column: span 2;
+      }
+      #B3 {
+        background-color: aqua;
+        border-bottom: 10px solid black ;
+      }
+      #B4 {
+        grid-row: span 2;
+      }
+      #C2 {
+        background-color: yellow;
+      }
+      #C3 {
+        background-color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Write your HTML here -->
+    <div class="flex-main">
+      <div class="grid">
+        <div class="cell" id="A1"></div>
+        <div class="cell" id="A2"></div>
+        <div class="cell" id="B1"></div>
+        <div class="cell" id="B2"></div>
+        <div class="cell" id="B3"></div>
+        <div class="cell" id="B4"></div>
+        <div class="cell" id="C1"></div>
+        <div class="cell" id="C2"></div>
+        <div class="cell" id="C3"></div>
+      </div>
+    </div>
+  </body>
+</html>
