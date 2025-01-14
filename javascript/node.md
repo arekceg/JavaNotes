@@ -6,6 +6,9 @@ Wyciągneli silinik JSowy z Chromium (V8 engine) i dzięki temu mogą teraz uży
 Standardowe:
 - https://nodejs.org/docs/latest/api/
 
+- `nodemon` pozwala na hot-reload apki po zmianach
+- `express` - framework do tworzenia serwerów
+
 ### Ładowanie
 #### ESM
 - `import dns from 'node:dns';`
