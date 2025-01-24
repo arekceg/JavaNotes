@@ -1,0 +1,25 @@
+{
+  "name": "bandname",
+  "version": "1.0.0",
+  "description": "Random name generator",
+  "main": "bandname.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Prismatik/bandname.git"
+  },
+  "keywords": [
+    "random",
+    "name",
+    "generator",
+    "names"
+  ],
+  "author": "david@banham.id.au",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Prismatik/bandname/issues"
+  },
+  "homepage": "https://github.com/Prismatik/bandname"
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EJS Tags</title>
+  </head>
+
+  <body>
+    <h1><%= title %></h1>
+    <p>Current second: <%= seconds %></p>
+    <%- include('items.ejs') %>
+    <p>
+      <%- htmlContent %>
+      <!-- HTML content goes here -->
+    </p>
+    <!-- Footer goes here -->
+    <%- include('footer.ejs') %>
+  </body>
+</html>

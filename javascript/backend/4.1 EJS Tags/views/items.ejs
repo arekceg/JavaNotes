@@ -1,0 +1,9 @@
+<% if (seconds % 2 === 0) { %>
+<ul>
+  <% items.forEach(item => { %>
+  <li><%= item %></li>
+  <% }); %>
+</ul>
+<% } else { %>
+<p>No items to display</p>
+<% } %>
