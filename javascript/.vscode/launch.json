@@ -7,11 +7,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "AXIOS",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/backend/5.3 Axios/index.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Auth",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/backend/5.4_Authentication/index.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
