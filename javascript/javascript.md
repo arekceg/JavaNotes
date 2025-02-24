@@ -96,3 +96,6 @@ Dużo więcej animacji: https://api.jquery.com/category/effects/
 ## ES6
 
 - Expressions vs statements??
+
+### Destructuring
+

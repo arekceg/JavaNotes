@@ -16,3 +16,10 @@
 ## BABEL
 - Kompilator do javascriptu
 - Przerabia współczeny JS na bardziej zrozumiały dla przeglądarek 
+
+## REACT DEV TOOLS
+- Nakładka do Chrome/Firefox która pozwala przeglądać drzewo komponentów reactowych!
+
+
+## React Controlled Components
+??

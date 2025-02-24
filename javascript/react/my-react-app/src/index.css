@@ -1,0 +1,15 @@
+.heading {
+  color: red;
+}
+
+.hightlighted{
+  font-weight: bold;
+  color: red;
+  border: 10px solid red;
+}
+
+.ramen-image{
+  width: 200px;
+  display: block;
+  margin: 10px;
+}
