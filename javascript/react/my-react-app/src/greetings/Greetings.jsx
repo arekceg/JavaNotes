@@ -9,7 +9,7 @@ const Greetings = () => {
 
     const getTimeOfDay = () => {
         const currentHour = new Date().getHours();
-        return Object.values(timeConfig).find(period => currentHour < period.endHour) 
+        return Object.values(timeConfig).find(period => currentHour < period.endHour)
             || timeConfig.evening;
     };
 
