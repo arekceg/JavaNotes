@@ -1,11 +1,14 @@
-import logo from '../assets/logo.png';
+import React from 'react';
+import logo from "../assets/logo.png";
 
-export default function Header() {
+const Header = () => {
   return (
-    <header>
-      <img src={logo} alt="A canvas" />
-      <h1>ReactArt</h1>
-      <p>A community of artists and art-lovers.</p>
+    <header className="text-2xl font-pacifico">
+      <img className="mb-8 w-44" src={logo} alt="A canvas" />
+      <h1>Welcome to My Site</h1>
+      <p className="capitalize">A community of artists and art-lovers.</p>
     </header>
   );
-}
+};
+
+export default Header;

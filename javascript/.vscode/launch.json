@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "type": "node",
             "request": "launch",
@@ -24,6 +25,18 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/backend/5.4_Authentication/index.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debugging course app",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/react/react-complete-guide-course-resources/code/06 Debugging/01-starting-project/src/App.jsx",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { styled } from "styled-components";
+import { StyledInput } from "./StyledInput";
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+`;
 
 export default function AuthInputs() {
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [enteredPassword, setEnteredPassword] = useState('');
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredPassword, setEnteredPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   function handleInputChange(identifier, value) {
-    if (identifier === 'email') {
+    if (identifier === "email") {
       setEnteredEmail(value);
     } else {
       setEnteredPassword(value);
@@ -17,36 +26,38 @@ export default function AuthInputs() {
     setSubmitted(true);
   }
 
-  const emailNotValid = submitted && !enteredEmail.includes('@');
+  const emailNotValid = submitted && !enteredEmail.includes("@");
   const passwordNotValid = submitted && enteredPassword.trim().length < 6;
 
   return (
     <div id="auth-inputs">
-      <div className="controls">
+      <Controls>
         <p>
-          <label>Email</label>
-          <input
+          <StyledInput
             type="email"
-            className={emailNotValid ? 'invalid' : undefined}
-            onChange={(event) => handleInputChange('email', event.target.value)}
+            valid={!emailNotValid}
+            onChange={(event) => handleInputChange("email", event.target.value)}
+            label="Email"
           />
         </p>
         <p>
-          <label>Password</label>
-          <input
+          <StyledInput
+            label="Password"
             type="password"
-            className={passwordNotValid ? 'invalid' : undefined}
+            valid={!passwordNotValid}
             onChange={(event) =>
-              handleInputChange('password', event.target.value)
+              handleInputChange("password", event.target.value)
             }
           />
         </p>
-      </div>
+      </Controls>
       <div className="actions">
         <button type="button" className="text-button">
           Create a new account
         </button>
-        <button className='button' onClick={handleLogin}>Sign In</button>
+        <button className="button" onClick={handleLogin}>
+          Sign In
+        </button>
       </div>
     </div>
   );

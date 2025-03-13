@@ -23,3 +23,11 @@
 
 ## React Controlled Components
 ??
+
+## Strict Mode
+- Wrapper na komponent
+- Wymusza dwukrotne wywołanie każdej funkcji w tym komponencie
+- Pomaga wyłapać bugi
+
+## Ref + Portal
+
